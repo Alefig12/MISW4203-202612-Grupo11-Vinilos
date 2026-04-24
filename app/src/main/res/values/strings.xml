@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Vinilos_Grupo11</string>
+    <string name="base_url">https://backvynils-q6yc.onrender.com</string>
 </resources>
