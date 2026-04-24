@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.backvynils_app_grupo_11"
+    namespace = "com.example.vinilos_grupo11"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.backvynils_app_grupo_11"
+        applicationId = "com.example.vinilos_grupo11"
         minSdk = 23
         targetSdk = 36
         versionCode = 1

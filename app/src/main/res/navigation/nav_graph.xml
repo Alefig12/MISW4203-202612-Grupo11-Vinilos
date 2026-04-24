@@ -6,17 +6,17 @@
 
     <fragment
         android:id="@+id/albumsFragment"
-        android:name="com.example.backvynils_app_grupo_11.ui.albums.AlbumsFragment"
+        android:name="com.example.vinilos_grupo11.ui.albums.AlbumsFragment"
         android:label="@string/nav_albums" />
 
     <fragment
         android:id="@+id/artistsFragment"
-        android:name="com.example.backvynils_app_grupo_11.ui.artists.ArtistsFragment"
+        android:name="com.example.vinilos_grupo11.ui.artists.ArtistsFragment"
         android:label="@string/nav_artists" />
 
     <fragment
         android:id="@+id/collectorsFragment"
-        android:name="com.example.backvynils_app_grupo_11.ui.collectors.CollectorsFragment"
+        android:name="com.example.vinilos_grupo11.ui.collectors.CollectorsFragment"
         android:label="@string/nav_collectors" />
 
 </navigation>
