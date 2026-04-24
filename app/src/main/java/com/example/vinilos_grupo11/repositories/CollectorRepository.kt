@@ -1,8 +1,8 @@
-package com.example.vinilos_grupo11.repository
+package com.example.vinilos_grupo11.repositories
 
 import android.content.Context
 import com.example.vinilos_grupo11.database.dao.CollectorDao
-import com.example.vinilos_grupo11.model.Collector
+import com.example.vinilos_grupo11.models.Collector
 import com.example.vinilos_grupo11.network.CollectorServiceAdapter
 
 class CollectorRepository(context: Context) : ICollectorRepository {

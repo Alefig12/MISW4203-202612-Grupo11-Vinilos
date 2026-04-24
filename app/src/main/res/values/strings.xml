@@ -7,4 +7,5 @@
     <string name="title_albums">Álbumes</string>
     <string name="title_artists">Artistas</string>
     <string name="error_collectors">Error al cargar los coleccionistas. Por favor intenta de nuevo.</string>
+    <string name="base_url">https://backvynils-q6yc.onrender.com</string>
 </resources>

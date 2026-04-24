@@ -8,8 +8,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.vinilos_grupo11.fake.FakeAlbumRepository
 import com.example.vinilos_grupo11.fake.FakeCollectorRepository
-import com.example.vinilos_grupo11.viewmodel.CollectorsViewModel
+import com.example.vinilos_grupo11.ui.MainActivity
+import com.example.vinilos_grupo11.viewmodels.CollectorsViewModel
+import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -30,11 +33,13 @@ class CollectorsScreenTest {
 
     @Before
     fun setUp() {
+        AlbumListViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
         CollectorsViewModel.testRepositoryFactory = { _ -> fakeRepo }
     }
 
     @After
     fun tearDown() {
+        AlbumListViewModel.testRepositoryFactory = null
         CollectorsViewModel.testRepositoryFactory = null
     }
 
@@ -44,7 +49,7 @@ class CollectorsScreenTest {
      */
     @Test
     fun tc_hu05_01_collectorsTitleIsDisplayed() {
-        onView(withId(R.id.collectorsFragment)).perform(click())
+        onView(withId(R.id.collectorListFragment)).perform(click())
         onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
     }
 
@@ -54,7 +59,7 @@ class CollectorsScreenTest {
      */
     @Test
     fun tc_hu05_02_collectorsNamesAreDisplayed() {
-        onView(withId(R.id.collectorsFragment)).perform(click())
+        onView(withId(R.id.collectorListFragment)).perform(click())
         onView(withId(R.id.rv_collectors)).check(matches(isDisplayed()))
         fakeRepo.fakeCollectors.forEach { collector ->
             onView(withText(collector.name)).check(matches(isDisplayed()))

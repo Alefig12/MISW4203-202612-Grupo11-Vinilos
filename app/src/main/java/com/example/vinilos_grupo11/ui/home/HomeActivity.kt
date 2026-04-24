@@ -1,9 +1,10 @@
-package com.example.vinilos_grupo11
+package com.example.vinilos_grupo11.ui.home
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vinilos_grupo11.databinding.ActivityHomeBinding
+import com.example.vinilos_grupo11.ui.MainActivity
 
 class HomeActivity : AppCompatActivity() {
 
@@ -15,15 +16,11 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnVisitante.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java).apply {
-                putExtra(MainActivity.EXTRA_ROLE, MainActivity.ROLE_VISITOR)
-            })
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
         binding.btnColeccionista.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java).apply {
-                putExtra(MainActivity.EXTRA_ROLE, MainActivity.ROLE_COLLECTOR)
-            })
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 }

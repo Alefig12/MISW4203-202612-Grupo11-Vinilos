@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vinilos_grupo11.databinding.FragmentCollectorsBinding
-import com.example.vinilos_grupo11.viewmodel.CollectorsViewModel
+import com.example.vinilos_grupo11.viewmodels.CollectorsViewModel
 
 class CollectorsFragment : Fragment() {
 

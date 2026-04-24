@@ -7,8 +7,12 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.vinilos_grupo11.fake.FakeAlbumRepository
 import com.example.vinilos_grupo11.fake.FakeCollectorRepository
-import com.example.vinilos_grupo11.viewmodel.CollectorsViewModel
+import com.example.vinilos_grupo11.ui.MainActivity
+import com.example.vinilos_grupo11.viewmodels.CollectorsViewModel
+import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
+import org.junit.Before
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,8 +24,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class CollectorsNavigationTest {
 
+    @Before
+    fun setUp() {
+        AlbumListViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
+    }
+
     @After
     fun tearDown() {
+        AlbumListViewModel.testRepositoryFactory = null
         CollectorsViewModel.testRepositoryFactory = null
     }
 
@@ -33,7 +43,7 @@ class CollectorsNavigationTest {
     fun tc_hu05_03_errorMessageIsShownWhenApiFails() {
         CollectorsViewModel.testRepositoryFactory = { _ -> FakeCollectorRepository(shouldFail = true) }
         ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withId(R.id.collectorsFragment)).perform(click())
+            onView(withId(R.id.collectorListFragment)).perform(click())
             onView(withId(R.id.tv_error)).check(matches(isDisplayed()))
         }
     }
@@ -45,7 +55,7 @@ class CollectorsNavigationTest {
     @Test
     fun tc_hu05_04_bottomNavigationIsVisible() {
         ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withId(R.id.bottom_navigation)).check(matches(isDisplayed()))
+            onView(withId(R.id.bottom_nav)).check(matches(isDisplayed()))
         }
     }
 
@@ -57,7 +67,7 @@ class CollectorsNavigationTest {
     @Test
     fun tc_hu05_05_navigatingToCollectorsShowsTitle() {
         ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withId(R.id.collectorsFragment)).perform(click())
+            onView(withId(R.id.collectorListFragment)).perform(click())
             onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
         }
     }

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vinilos_grupo11.databinding.ItemCollectorBinding
-import com.example.vinilos_grupo11.model.Collector
+import com.example.vinilos_grupo11.models.Collector
 
 class CollectorAdapter : ListAdapter<Collector, CollectorAdapter.ViewHolder>(DiffCallback()) {
 

@@ -2,7 +2,7 @@ package com.example.vinilos_grupo11.network
 
 import android.content.Context
 import com.android.volley.toolbox.JsonArrayRequest
-import com.example.vinilos_grupo11.model.Collector
+import com.example.vinilos_grupo11.models.Collector
 import org.json.JSONArray
 
 class CollectorServiceAdapter(private val context: Context) {

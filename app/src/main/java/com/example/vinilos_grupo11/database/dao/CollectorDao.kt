@@ -1,6 +1,6 @@
 package com.example.vinilos_grupo11.database.dao
 
-import com.example.vinilos_grupo11.model.Collector
+import com.example.vinilos_grupo11.models.Collector
 
 object CollectorDao {
     private var cache: List<Collector>? = null

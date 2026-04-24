@@ -1,4 +1,4 @@
-package com.example.vinilos_grupo11.viewmodel
+package com.example.vinilos_grupo11.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.vinilos_grupo11.model.Collector
-import com.example.vinilos_grupo11.repository.CollectorRepository
-import com.example.vinilos_grupo11.repository.ICollectorRepository
+import com.example.vinilos_grupo11.models.Collector
+import com.example.vinilos_grupo11.repositories.CollectorRepository
+import com.example.vinilos_grupo11.repositories.ICollectorRepository
 
 class CollectorsViewModel(private val repository: ICollectorRepository) : ViewModel() {
 
@@ -38,7 +38,6 @@ class CollectorsViewModel(private val repository: ICollectorRepository) : ViewMo
     }
 
     companion object {
-        // Permite inyectar un repositorio falso en pruebas instrumentadas
         var testRepositoryFactory: ((Application) -> ICollectorRepository)? = null
 
         fun factory(application: Application): ViewModelProvider.Factory = viewModelFactory {

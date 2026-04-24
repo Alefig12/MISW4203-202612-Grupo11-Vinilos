@@ -1,7 +1,7 @@
 package com.example.vinilos_grupo11.fake
 
-import com.example.vinilos_grupo11.model.Collector
-import com.example.vinilos_grupo11.repository.ICollectorRepository
+import com.example.vinilos_grupo11.models.Collector
+import com.example.vinilos_grupo11.repositories.ICollectorRepository
 
 class FakeCollectorRepository(private val shouldFail: Boolean = false) : ICollectorRepository {
 

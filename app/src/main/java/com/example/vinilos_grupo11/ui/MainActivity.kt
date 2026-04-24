@@ -1,30 +1,24 @@
-package com.example.vinilos_grupo11
+package com.example.vinilos_grupo11.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.vinilos_grupo11.databinding.ActivityMainBinding
+import com.example.vinilos_grupo11.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
+
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        binding.bottomNavigation.setupWithNavController(navController)
-    }
-
-    companion object {
-        const val EXTRA_ROLE = "extra_role"
-        const val ROLE_VISITOR = "visitor"
-        const val ROLE_COLLECTOR = "collector"
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNav.setupWithNavController(navController)
     }
 }
