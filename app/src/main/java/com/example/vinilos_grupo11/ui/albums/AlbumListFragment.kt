@@ -37,9 +37,10 @@ class AlbumListFragment: Fragment() {
 
         //2. Obtener el ViewModel via Factory
         val app = requireActivity().application as VinilosApplication
+        val repo = AlbumListViewModel.testRepositoryFactory?.invoke(app) ?: app.albumRepository
         viewModel = ViewModelProvider(
             this,
-            AlbumListViewModel.Factory(app, app.albumRepository)
+            AlbumListViewModel.Factory(app, repo)
         ).get(AlbumListViewModel::class.java)
 
         // 3. Observar los datos (observer para que actualicen)

@@ -3,9 +3,9 @@ package com.example.vinilos_grupo11.repositories
 import com.example.vinilos_grupo11.models.Album
 import com.example.vinilos_grupo11.network.AlbumServiceAdapter
 
-class AlbumRepository(private val adapter: AlbumServiceAdapter) {
+class AlbumRepository(private val adapter: AlbumServiceAdapter) : IAlbumRepository {
 
-    fun refreshData(
+    override fun refreshData(
         onSuccess: (List<Album>) -> Unit,
         onError: (Exception) -> Unit
     ) {

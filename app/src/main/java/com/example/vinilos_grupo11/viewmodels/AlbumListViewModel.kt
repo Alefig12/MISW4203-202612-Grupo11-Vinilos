@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.vinilos_grupo11.models.Album
-import com.example.vinilos_grupo11.repositories.AlbumRepository
+import com.example.vinilos_grupo11.repositories.IAlbumRepository
 
-class AlbumListViewModel(application: Application, private val repository: AlbumRepository) :
+class AlbumListViewModel(application: Application, private val repository: IAlbumRepository) :
     AndroidViewModel(application) {
 
     private val _albums = MutableLiveData<List<Album>>()
@@ -36,16 +36,19 @@ class AlbumListViewModel(application: Application, private val repository: Album
                 _eventNetworkError.value = true
             }
         )
-
     }
 
     fun onNetworkErrorShown() {
         _isNetworkErrorShown.value = true
     }
 
+    companion object {
+        var testRepositoryFactory: ((Application) -> IAlbumRepository)? = null
+    }
+
     class Factory(
         private val app: Application,
-        private val repository: AlbumRepository
+        private val repository: IAlbumRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AlbumListViewModel::class.java)) {

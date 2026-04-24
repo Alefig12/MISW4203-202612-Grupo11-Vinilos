@@ -1,16 +1,41 @@
+# Built output
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
 /build
+**/build/
 /captures
+
+# Gradle
+.gradle
+gradle/wrapper/gradle-wrapper.jar
+
+# Local config (never commit — contains SDK paths and secrets)
+local.properties
+
+# IDE - IntelliJ / Android Studio
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/*.xml
+*.iws
+
+# Native build
 .externalNativeBuild
 .cxx
-local.properties
-/.idea
+
+# macOS
+.DS_Store
+
+# Keystore / signing (never commit secrets)
+*.jks
+*.keystore
+keystore.properties
+
+# Kotlin / Java
+*.class
+*.kotlin_module
+
+# Logs
+*.log

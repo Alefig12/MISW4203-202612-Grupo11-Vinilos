@@ -1,4 +1,11 @@
 <resources>
-    <string name="app_name">Vinilos_Grupo11</string>
+    <string name="app_name">Vinilos</string>
+    <string name="nav_albums">Álbumes</string>
+    <string name="nav_artists">Artistas</string>
+    <string name="nav_collectors">Coleccionistas</string>
+    <string name="title_collectors">Coleccionistas</string>
+    <string name="title_albums">Álbumes</string>
+    <string name="title_artists">Artistas</string>
+    <string name="error_collectors">Error al cargar los coleccionistas. Por favor intenta de nuevo.</string>
     <string name="base_url">https://backvynils-q6yc.onrender.com</string>
 </resources>

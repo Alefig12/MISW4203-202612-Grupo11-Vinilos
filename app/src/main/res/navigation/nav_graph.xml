@@ -11,5 +11,14 @@
         android:label="Álbumes"
         tools:layout="@layout/fragment_album_list" />
 
-<!--    TODO: Crear fragments de Artistas y Collecionistas y añadirlos aquí-->
+    <fragment
+        android:id="@+id/artistListFragment"
+        android:name="com.example.vinilos_grupo11.ui.artists.ArtistsFragment"
+        android:label="@string/nav_artists" />
+
+    <fragment
+        android:id="@+id/collectorListFragment"
+        android:name="com.example.vinilos_grupo11.ui.collectors.CollectorsFragment"
+        android:label="@string/nav_collectors" />
+
 </navigation>
