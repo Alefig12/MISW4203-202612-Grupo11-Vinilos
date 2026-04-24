@@ -1,9 +1,25 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Vinilos_Grupo11" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.BackVynilsappgrupo11" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@color/vinilos_background</item>
+        <item name="colorPrimary">@color/vinilos_salmon</item>
+        <item name="colorPrimaryDark">@color/vinilos_background</item>
+        <item name="colorAccent">@color/vinilos_orange</item>
+        <item name="colorSurface">@color/vinilos_surface</item>
+        <item name="android:textColorPrimary">@color/vinilos_text_primary</item>
+        <item name="android:textColorSecondary">@color/vinilos_text_secondary</item>
+        <item name="android:statusBarColor">@color/vinilos_background</item>
+        <item name="android:navigationBarColor">@color/vinilos_background</item>
     </style>
 
-    <style name="Theme.Vinilos_Grupo11" parent="Base.Theme.Vinilos_Grupo11" />
+    <style name="VinilosButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:backgroundTint">@color/vinilos_button_bg</item>
+        <item name="android:textColor">@color/vinilos_text_primary</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
 </resources>
