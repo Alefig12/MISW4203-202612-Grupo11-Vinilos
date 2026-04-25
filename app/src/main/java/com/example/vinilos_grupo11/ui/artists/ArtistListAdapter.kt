@@ -5,6 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import android.graphics.drawable.Drawable
+import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemArtistBinding
 import com.example.vinilos_grupo11.models.Artist
 
@@ -14,7 +22,34 @@ class ArtistListAdapter : ListAdapter<Artist, ArtistListAdapter.ViewHolder>(Diff
         RecyclerView.ViewHolder(binding.root) {
         fun bind(artist: Artist) {
             binding.tvArtistName.text = artist.name
-            binding.tvArtistDescription.text = artist.description
+            
+            binding.tvNoPhoto.visibility = View.GONE
+            
+            Glide.with(binding.ivArtistImage.context)
+                .load(artist.image)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        binding.tvNoPhoto.visibility = View.VISIBLE
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        binding.tvNoPhoto.visibility = View.GONE
+                        return false
+                    }
+                })
+                .into(binding.ivArtistImage)
         }
     }
 
