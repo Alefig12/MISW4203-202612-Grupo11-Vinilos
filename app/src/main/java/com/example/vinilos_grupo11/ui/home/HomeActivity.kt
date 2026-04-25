@@ -16,11 +16,21 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnVisitante.setOnClickListener {
+            saveUserRole("Visitante")
             startActivity(Intent(this, MainActivity::class.java))
         }
 
         binding.btnColeccionista.setOnClickListener {
+            saveUserRole("Coleccionista")
             startActivity(Intent(this, MainActivity::class.java))
+        }
+    }
+
+    private fun saveUserRole(role: String) {
+        val sharedPref = getSharedPreferences("VinilosPrefs", MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("user_role", role)
+            apply()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.vinilos_grupo11.ui.albums
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.application.VinilosApplication
 import com.example.vinilos_grupo11.databinding.FragmentAlbumListBinding
@@ -31,12 +32,15 @@ class AlbumListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //1. Configurar el RecyclerView con su adapter
+        // 1. Configurar el Header dinámico y la barra superior
+        setupHeaderAndTopBar()
+
+        // 2. Configurar el RecyclerView con GridLayout de 2 columnas
         adapter = AlbumListAdapter()
-        binding.albumsRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.albumsRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.albumsRecyclerView.adapter = adapter
 
-        //2. Obtener el ViewModel via Factory
+        // 3. Obtener el ViewModel via Factory
         val app = requireActivity().application as VinilosApplication
         val repo = AlbumListViewModel.testRepositoryFactory?.invoke(app) ?: app.albumRepository
         viewModel = ViewModelProvider(
@@ -44,9 +48,13 @@ class AlbumListFragment: Fragment() {
             AlbumListViewModel.Factory(app, repo)
         ).get(AlbumListViewModel::class.java)
 
-        // 3. Observar los datos (observer para que actualicen)
+        // 4. Observar los datos
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
-            adapter.albums=albums
+            adapter.albums = albums
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.eventNetworkError.observe(viewLifecycleOwner) { isError ->
@@ -55,6 +63,15 @@ class AlbumListFragment: Fragment() {
                 viewModel.onNetworkErrorShown()
             }
         }
+    }
+
+    private fun setupHeaderAndTopBar() {
+        // Leer el rol del usuario de SharedPreferences
+        val sharedPref = requireActivity().getSharedPreferences("VinilosPrefs", Context.MODE_PRIVATE)
+        val userRole = sharedPref.getString("user_role", "Visitante") ?: "Visitante"
+
+        // Actualizar el header
+        binding.tvCatalogHeader.text = getString(R.string.catalog_header, userRole)
     }
 
     override fun onDestroyView() {
