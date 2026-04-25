@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Vinilos</string>
+    <string name="nav_albums">Albums</string>
+    <string name="nav_artists">Artists</string>
+    <string name="nav_collectors">Collectors</string>
+    <string name="title_collectors">Collectors</string>
+    <string name="title_albums">Albums</string>
+    <string name="title_artists">Artists</string>
+    <string name="error_collectors">Failed to load collectors. Please try again.</string>
+    <string name="error_connection">Connection error</string>
+    <string name="home_logo">VINILOS</string>
+    <string name="btn_visitor">VISITOR</string>
+    <string name="btn_collector">COLLECTOR</string>
+</resources>

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/albumListFragment"
         android:name="com.example.vinilos_grupo11.ui.albums.AlbumListFragment"
-        android:label="Álbumes"
+        android:label="@string/nav_albums"
         tools:layout="@layout/fragment_album_list" />
 
     <fragment

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.application.VinilosApplication
 import com.example.vinilos_grupo11.databinding.FragmentAlbumListBinding
 import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
@@ -50,7 +51,7 @@ class AlbumListFragment: Fragment() {
 
         viewModel.eventNetworkError.observe(viewLifecycleOwner) { isError ->
             if (isError && !viewModel.isNetworkErrorShown.value!!) {
-                Toast.makeText(context, "Error de conexión", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.error_connection), Toast.LENGTH_LONG).show()
                 viewModel.onNetworkErrorShown()
             }
         }

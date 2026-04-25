@@ -9,7 +9,7 @@
         android:id="@+id/tv_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="VINILOS"
+        android:text="@string/home_logo"
         android:textColor="@color/vinilos_salmon"
         android:textSize="52sp"
         android:textStyle="bold"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="48dp"
         android:layout_marginBottom="16dp"
-        android:text="VISITANTE"
+        android:text="@string/btn_visitor"
         app:layout_constraintBottom_toTopOf="@id/btn_coleccionista"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="48dp"
         android:layout_marginBottom="80dp"
-        android:text="COLECCIONISTA"
+        android:text="@string/btn_collector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
