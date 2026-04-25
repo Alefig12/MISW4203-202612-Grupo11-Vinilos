@@ -7,9 +7,10 @@
     <string name="title_albums">Álbumes</string>
     <string name="title_artists">Artistas</string>
     <string name="error_collectors">Error al cargar los coleccionistas. Por favor intenta de nuevo.</string>
+    <string name="error_artists">Error al cargar los artistas. Por favor intenta de nuevo.</string>
     <string name="error_connection">Error de conexión</string>
     <string name="home_logo">VINILOS</string>
     <string name="btn_visitor">VISITANTE</string>
     <string name="btn_collector">COLECCIONISTA</string>
-    <string name="base_url">https://backvynils-q6yc.onrender.com</string>
+    <string name="base_url" translatable="false">https://backvynils-q6yc.onrender.com</string>
 </resources>
