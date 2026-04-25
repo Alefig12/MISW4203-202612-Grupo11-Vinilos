@@ -13,4 +13,6 @@
     <string name="btn_visitor">VISITANTE</string>
     <string name="btn_collector">COLECCIONISTA</string>
     <string name="base_url" translatable="false">https://backvynils-q6yc.onrender.com</string>
+    <string name="catalog_header">Catálogo de Álbumes (%1$s)</string>
+    <string name="back_description">Regresar</string>
 </resources>

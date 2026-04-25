@@ -21,19 +21,25 @@ class AlbumListViewModel(application: Application, private val repository: IAlbu
     private val _isNetworkErrorShown = MutableLiveData<Boolean>(false)
     val isNetworkErrorShown: LiveData<Boolean> get() = _isNetworkErrorShown
 
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     init {
         refreshDataFromNetwork()
     }
 
     private fun refreshDataFromNetwork() {
+        _isLoading.value = true
         repository.refreshData(
             onSuccess = { albums ->
                 _albums.postValue(albums)
-                _eventNetworkError.value = false
-                _isNetworkErrorShown.value = false
+                _eventNetworkError.postValue(false)
+                _isNetworkErrorShown.postValue(false)
+                _isLoading.postValue(false)
             },
             onError = {
-                _eventNetworkError.value = true
+                _eventNetworkError.postValue(true)
+                _isLoading.postValue(false)
             }
         )
     }
