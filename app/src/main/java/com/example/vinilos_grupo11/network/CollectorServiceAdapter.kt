@@ -2,6 +2,7 @@ package com.example.vinilos_grupo11.network
 
 import android.content.Context
 import com.android.volley.toolbox.JsonArrayRequest
+import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.models.Collector
 import org.json.JSONArray
 
@@ -15,7 +16,8 @@ class CollectorServiceAdapter(private val context: Context) {
         onSuccess: (List<Collector>) -> Unit,
         onError: (Exception) -> Unit
     ) {
-        val url = "${NetworkServiceAdapter.BASE_URL}collectors"
+        val baseUrl = context.getString(R.string.base_url)
+        val url = "${baseUrl}/collectors"
         val request = JsonArrayRequest(
             url,
             { response -> onSuccess(parseCollectors(response)) },
