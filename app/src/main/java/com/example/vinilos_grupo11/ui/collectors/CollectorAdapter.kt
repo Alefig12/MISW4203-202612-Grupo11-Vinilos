@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemCollectorBinding
 import com.example.vinilos_grupo11.models.Collector
 
@@ -14,6 +16,8 @@ class CollectorAdapter : ListAdapter<Collector, CollectorAdapter.ViewHolder>(Dif
         RecyclerView.ViewHolder(binding.root) {
         fun bind(collector: Collector) {
             binding.tvCollectorName.text = collector.name
+            binding.tvNoPhoto.visibility = View.VISIBLE
+            binding.ivCollectorImage.setImageResource(android.R.color.transparent)
         }
     }
 

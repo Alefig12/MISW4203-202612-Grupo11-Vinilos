@@ -15,4 +15,7 @@
     <string name="base_url" translatable="false">https://backvynils-q6yc.onrender.com</string>
     <string name="catalog_header">Catálogo de Álbumes (%1$s)</string>
     <string name="back_description">Regresar</string>
+    <string name="artists_catalog_header">Catálogo de Artistas (%1$s)</string>
+    <string name="collectors_catalog_header">Catálogo de Coleccionistas (%1$s)</string>
+    <string name="no_photo">No Photo</string>
 </resources>

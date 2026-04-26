@@ -32,15 +32,12 @@ class AlbumListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Configurar el Header dinámico y la barra superior
         setupHeaderAndTopBar()
 
-        // 2. Configurar el RecyclerView con GridLayout de 2 columnas
         adapter = AlbumListAdapter()
         binding.albumsRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.albumsRecyclerView.adapter = adapter
 
-        // 3. Obtener el ViewModel via Factory
         val app = requireActivity().application as VinilosApplication
         val repo = AlbumListViewModel.testRepositoryFactory?.invoke(app) ?: app.albumRepository
         viewModel = ViewModelProvider(
@@ -48,7 +45,6 @@ class AlbumListFragment: Fragment() {
             AlbumListViewModel.Factory(app, repo)
         ).get(AlbumListViewModel::class.java)
 
-        // 4. Observar los datos
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
             adapter.albums = albums
         }
@@ -66,11 +62,9 @@ class AlbumListFragment: Fragment() {
     }
 
     private fun setupHeaderAndTopBar() {
-        // Leer el rol del usuario de SharedPreferences
         val sharedPref = requireActivity().getSharedPreferences("VinilosPrefs", Context.MODE_PRIVATE)
         val userRole = sharedPref.getString("user_role", "Visitante") ?: "Visitante"
 
-        // Actualizar el header
         binding.tvCatalogHeader.text = getString(R.string.catalog_header, userRole)
     }
 
