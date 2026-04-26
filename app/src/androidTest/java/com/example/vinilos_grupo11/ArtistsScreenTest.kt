@@ -70,8 +70,7 @@ class ArtistsScreenTest {
 
     /**
      * TC-HU03-05 (Negativo): Manejo de error cuando falla el consumo de datos de la API.
-     * Valida OBJ-02 (ausencia de conectividad / respuesta no exitosa) y OBJ-03 (estabilidad).
-     */
+     * Valida OBJ-02 (ausencia de conectividad / respuesta no exitosa) y OBJ-03 (estabilidad). */
     @Test
     fun errorIsShownWhenApiFails() {
         ArtistViewModel.testRepositoryFactory = { _ -> FakeArtistRepository(shouldFail = true) }

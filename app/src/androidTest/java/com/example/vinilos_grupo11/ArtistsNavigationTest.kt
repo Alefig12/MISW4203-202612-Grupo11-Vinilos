@@ -19,8 +19,7 @@ import org.junit.runner.RunWith
 
 /**
  * TC-HU03 al TC-HU03-04: Pruebas de navegación para Artistas.
- * Validan el flujo de navegación (OBJ-01) y la estabilidad (OBJ-03).
- */
+ * Validan el flujo de navegación (OBJ-01) y la estabilidad (OBJ-03). */
 @RunWith(AndroidJUnit4::class)
 class ArtistsNavigationTest {
 
@@ -37,8 +36,7 @@ class ArtistsNavigationTest {
 
     /**
      * TC-HU03-03 (Navegación): El menú de navegación inferior es visible al abrir la app.
-     * Valida OBJ-01 y OBJ-03.
-     */
+     * Valida OBJ-01 y OBJ-03. */
     @Test
     fun tc_nav_01_bottomNavigationIsVisible() {
         ActivityScenario.launch(MainActivity::class.java).use {

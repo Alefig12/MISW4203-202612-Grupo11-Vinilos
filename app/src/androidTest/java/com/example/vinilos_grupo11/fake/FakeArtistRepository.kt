@@ -11,6 +11,7 @@ class FakeArtistRepository(private val shouldFail: Boolean = false) : IArtistRep
         Artist(id = 3, name = "David Bowie", image = "https://example.com/bowie.jpg", description = "Starman", birthDate = "1947-01-08")
     )
 
+
     override fun getArtists(
         onSuccess: (List<Artist>) -> Unit,
         onError: () -> Unit
