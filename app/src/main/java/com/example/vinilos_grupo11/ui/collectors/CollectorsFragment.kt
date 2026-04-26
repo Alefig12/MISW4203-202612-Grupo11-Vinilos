@@ -45,6 +45,7 @@ class CollectorsFragment : Fragment() {
 
         viewModel.hasError.observe(viewLifecycleOwner) { hasError ->
             binding.rvCollectors.visibility = if (hasError) View.GONE else View.VISIBLE
+            binding.tvCollectorsError.visibility = if (hasError) View.VISIBLE else View.GONE
         }
 
         viewModel.collectors.observe(viewLifecycleOwner) { collectors ->

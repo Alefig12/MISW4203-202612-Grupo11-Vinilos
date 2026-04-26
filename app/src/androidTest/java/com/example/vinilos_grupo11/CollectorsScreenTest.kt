@@ -50,7 +50,7 @@ class CollectorsScreenTest {
     @Test
     fun tc_hu05_01_collectorsTitleIsDisplayed() {
         onView(withId(R.id.collectorListFragment)).perform(click())
-        onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_collectors_header)).check(matches(isDisplayed()))
     }
 
     /**
