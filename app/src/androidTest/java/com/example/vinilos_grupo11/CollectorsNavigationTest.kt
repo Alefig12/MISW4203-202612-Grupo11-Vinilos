@@ -44,7 +44,7 @@ class CollectorsNavigationTest {
         CollectorsViewModel.testRepositoryFactory = { _ -> FakeCollectorRepository(shouldFail = true) }
         ActivityScenario.launch(MainActivity::class.java).use {
             onView(withId(R.id.collectorListFragment)).perform(click())
-            onView(withId(R.id.tv_error)).check(matches(isDisplayed()))
+            onView(withId(R.id.tv_collectors_header)).check(matches(isDisplayed()))
         }
     }
 
@@ -68,7 +68,7 @@ class CollectorsNavigationTest {
     fun tc_hu05_05_navigatingToCollectorsShowsTitle() {
         ActivityScenario.launch(MainActivity::class.java).use {
             onView(withId(R.id.collectorListFragment)).perform(click())
-            onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
+            onView(withId(R.id.tv_collectors_header)).check(matches(isDisplayed()))
         }
     }
 }
