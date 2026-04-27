@@ -54,6 +54,9 @@ class AlbumListFragment: Fragment() {
         }
 
         viewModel.eventNetworkError.observe(viewLifecycleOwner) { isError ->
+            binding.albumsRecyclerView.visibility = if (isError) View.GONE else View.VISIBLE
+            binding.tvAlbumsError.visibility = if (isError) View.VISIBLE else View.GONE
+
             if (isError && !viewModel.isNetworkErrorShown.value!!) {
                 Toast.makeText(context, getString(R.string.error_connection), Toast.LENGTH_LONG).show()
                 viewModel.onNetworkErrorShown()

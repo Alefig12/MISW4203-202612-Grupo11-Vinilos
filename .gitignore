@@ -41,3 +41,4 @@ keystore.properties
 *.log
 
 .idea
+/.idea/
