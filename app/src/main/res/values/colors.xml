@@ -2,4 +2,16 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta Vinilos -->
+    <color name="vinilos_background">#1B1B1B</color>
+    <color name="vinilos_surface">#262626</color>
+    <color name="vinilos_card">#2C2C2C</color>
+    <color name="vinilos_salmon">#E8856A</color>
+    <color name="vinilos_orange">#F07030</color>
+    <color name="vinilos_text_primary">#FFFFFF</color>
+    <color name="vinilos_text_secondary">#AAAAAA</color>
+    <color name="vinilos_button_bg">#2C2C2C</color>
+    <color name="vinilos_nav_bg">#1B1B1B</color>
+    <color name="vinilos_nav_inactive">#666666</color>
 </resources>
