@@ -27,5 +27,19 @@ class ArtistRepository(context: Context) : IArtistRepository {
             onError = { onError() }
         )
     }
+
+    override fun getArtistDetail(
+        artistId: Int,
+        onSuccess: (Artist) -> Unit,
+        onError: () -> Unit
+    ) {
+        serviceAdapter.getArtistDetail(
+            artistId = artistId,
+            onSuccess = { artist ->
+                onSuccess(artist)
+            },
+            onError = { onError() }
+        )
+    }
 }
 

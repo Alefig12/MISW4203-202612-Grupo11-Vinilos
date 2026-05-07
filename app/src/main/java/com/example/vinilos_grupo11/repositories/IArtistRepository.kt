@@ -7,5 +7,10 @@ interface IArtistRepository {
         onSuccess: (List<Artist>) -> Unit,
         onError: () -> Unit
     )
-}
 
+    fun getArtistDetail(
+        artistId: Int,
+        onSuccess: (Artist) -> Unit,
+        onError: () -> Unit
+    )
+}

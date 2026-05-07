@@ -13,6 +13,8 @@
     <string name="btn_visitor">VISITOR</string>
     <string name="btn_collector">COLLECTOR</string>
     <string name="catalog_header">Album Catalog (%1$s)</string>
+    <string name="artist_image_desc">Artist image</string>
+    <string name="albums_title">Albums</string>
     <string name="back_description">Back</string>
     <string name="artists_catalog_header">Artists Catalog (%1$s)</string>
     <string name="collectors_catalog_header">Collectors Catalog (%1$s)</string>

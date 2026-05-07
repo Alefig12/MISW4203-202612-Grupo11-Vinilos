@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.FragmentArtistsBinding
 import com.example.vinilos_grupo11.viewmodels.ArtistViewModel
@@ -35,7 +36,12 @@ class ArtistsFragment : Fragment() {
 
         setupHeader()
 
-        val adapter = ArtistListAdapter()
+        val adapter = ArtistListAdapter { artistId ->
+            val bundle = Bundle().apply {
+                putInt("artistId", artistId)
+            }
+            findNavController().navigate(R.id.artistDetailFragment, bundle)
+        }
         binding.rvArtists.adapter = adapter
         binding.rvArtists.layoutManager = GridLayoutManager(requireContext(), 2)
 
