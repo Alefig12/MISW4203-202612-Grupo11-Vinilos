@@ -1,6 +1,7 @@
 package com.example.vinilos_grupo11.repositories
 
 import com.example.vinilos_grupo11.models.Album
+import com.example.vinilos_grupo11.models.AlbumDetail
 import com.example.vinilos_grupo11.network.AlbumServiceAdapter
 
 class AlbumRepository(private val adapter: AlbumServiceAdapter) : IAlbumRepository {
@@ -10,6 +11,14 @@ class AlbumRepository(private val adapter: AlbumServiceAdapter) : IAlbumReposito
         onError: (Exception) -> Unit
     ) {
         adapter.getAlbums(onSuccess, onError)
+    }
+
+    override fun getAlbumDetail(
+        albumId: Int,
+        onSuccess: (AlbumDetail) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        adapter.getAlbumById(albumId, onSuccess, onError)
     }
 
 }

@@ -19,4 +19,8 @@
     <string name="artists_catalog_header">Artists Catalog (%1$s)</string>
     <string name="collectors_catalog_header">Collectors Catalog (%1$s)</string>
     <string name="no_photo">No Photo</string>
+    <string name="track_list_header">Track List</string>
+    <string name="tracks_summary">%1$d TRACKS • %2$s TOTAL</string>
+    <string name="album_detail_error">Failed to load album detail</string>
+    <string name="album_label">Album</string>
 </resources>
