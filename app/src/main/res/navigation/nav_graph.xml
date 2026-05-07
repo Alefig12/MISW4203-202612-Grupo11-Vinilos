@@ -21,4 +21,13 @@
         android:name="com.example.vinilos_grupo11.ui.collectors.CollectorsFragment"
         android:label="@string/nav_collectors" />
 
+    <fragment
+        android:id="@+id/artistDetailFragment"
+        android:name="com.example.vinilos_grupo11.ui.artists.ArtistDetailFragment"
+        android:label="Detalle de Artista">
+        <argument
+            android:name="artistId"
+            app:argType="integer" />
+    </fragment>
+
 </navigation>

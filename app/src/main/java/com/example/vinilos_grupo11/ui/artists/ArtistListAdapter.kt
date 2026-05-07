@@ -16,11 +16,12 @@ import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemArtistBinding
 import com.example.vinilos_grupo11.models.Artist
 
-class ArtistListAdapter : ListAdapter<Artist, ArtistListAdapter.ViewHolder>(DiffCallback()) {
+class ArtistListAdapter(private val onArtistClick: (Int) -> Unit) : ListAdapter<Artist, ArtistListAdapter.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemArtistBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(artist: Artist) {
+            binding.root.setOnClickListener { onArtistClick(artist.id) }
             binding.tvArtistName.text = artist.name
             
             binding.tvNoPhoto.visibility = View.GONE
