@@ -29,6 +29,8 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder>(
             notifyDataSetChanged()
         }
 
+    var onAlbumClick: ((Int) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val binding = ItemAlbumBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -43,6 +45,10 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder>(
         holder.binding.tvAlbumName.text = album.name
         holder.binding.tvAlbumArtist.text = album.genre // Usando género como placeholder de artista
         holder.binding.tvAlbumArtist.visibility = if (showArtistName) View.VISIBLE else View.GONE
+
+        holder.itemView.setOnClickListener {
+            onAlbumClick?.invoke(album.albumId)
+        }
 
         holder.binding.tvNoPhoto.visibility = View.GONE
 
