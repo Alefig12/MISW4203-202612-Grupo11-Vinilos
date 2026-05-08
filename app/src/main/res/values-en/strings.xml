@@ -23,4 +23,11 @@
     <string name="tracks_summary">%1$d TRACKS • %2$s TOTAL</string>
     <string name="album_detail_error">Failed to load album detail</string>
     <string name="album_label">Album</string>
+    <string name="collector_label">Collector</string>
+    <string name="collector_image_desc">Collector image</string>
+    <string name="collector_email_label">Email</string>
+    <string name="collector_phone_label">Phone</string>
+    <string name="collector_albums_title">Favorite albums</string>
+    <string name="collector_no_albums">This collector has no favorite albums to display.</string>
+    <string name="collector_detail_error">Failed to load collector detail</string>
 </resources>

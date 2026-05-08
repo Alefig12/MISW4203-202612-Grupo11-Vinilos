@@ -24,4 +24,11 @@
     <string name="tracks_summary">%1$d PISTAS • %2$s TOTAL</string>
     <string name="album_detail_error">Error al cargar el detalle del álbum</string>
     <string name="album_label">Álbum</string>
+    <string name="collector_label">Coleccionista</string>
+    <string name="collector_image_desc">Imagen del coleccionista</string>
+    <string name="collector_email_label">Correo electrónico</string>
+    <string name="collector_phone_label">Teléfono</string>
+    <string name="collector_albums_title">Álbumes favoritos</string>
+    <string name="collector_no_albums">Este coleccionista no tiene álbumes favoritos para mostrar.</string>
+    <string name="collector_detail_error">Error al cargar el detalle del coleccionista</string>
 </resources>

@@ -7,4 +7,10 @@ interface ICollectorRepository {
         onSuccess: (List<Collector>) -> Unit,
         onError: () -> Unit
     )
+
+    fun getCollectorDetail(
+        collectorId: Int,
+        onSuccess: (Collector) -> Unit,
+        onError: () -> Unit
+    )
 }
