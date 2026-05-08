@@ -27,4 +27,18 @@ class CollectorRepository(context: Context) : ICollectorRepository {
             onError = { onError() }
         )
     }
+
+    override fun getCollectorDetail(
+        collectorId: Int,
+        onSuccess: (Collector) -> Unit,
+        onError: () -> Unit
+    ) {
+        serviceAdapter.getCollectorDetail(
+            collectorId = collectorId,
+            onSuccess = { collector ->
+                onSuccess(collector)
+            },
+            onError = { onError() }
+        )
+    }
 }
