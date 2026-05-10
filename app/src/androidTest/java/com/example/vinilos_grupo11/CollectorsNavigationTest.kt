@@ -14,6 +14,7 @@ import com.example.vinilos_grupo11.viewmodels.CollectorsViewModel
 import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
 import org.junit.Before
 import org.junit.After
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -23,6 +24,9 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class CollectorsNavigationTest {
+
+    @get:Rule
+    val disableAnimations = DisableAnimationsRule()
 
     @Before
     fun setUp() {

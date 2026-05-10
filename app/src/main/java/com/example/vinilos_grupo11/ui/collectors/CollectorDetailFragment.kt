@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.vinilos_grupo11.R
@@ -42,8 +43,9 @@ class CollectorDetailFragment : Fragment() {
         val albumsAdapter = AlbumListAdapter().apply {
             showArtistName = false
         }
-        binding.rvCollectorAlbums.adapter = albumsAdapter
         binding.rvCollectorAlbums.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvCollectorAlbums.setHasFixedSize(true)
+        binding.rvCollectorAlbums.adapter = albumsAdapter
 
         viewModel.collector.observe(viewLifecycleOwner) { collector ->
             collector?.let {
@@ -81,6 +83,7 @@ class CollectorDetailFragment : Fragment() {
             binding.tvNoPhoto.visibility = View.GONE
             Glide.with(this)
                 .load(collector.image)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .placeholder(R.drawable.placeholder_no_photo)
                 .error(R.drawable.placeholder_no_photo)
                 .transform(CenterCrop(), RoundedCorners(24))
@@ -88,7 +91,7 @@ class CollectorDetailFragment : Fragment() {
         }
 
         val albums = collector.favoriteAlbums
-        albumsAdapter.albums = albums
+        albumsAdapter.submitList(albums)
         binding.tvAlbumsHeader.visibility = if (albums.isNotEmpty()) View.VISIBLE else View.GONE
         binding.rvCollectorAlbums.visibility = if (albums.isNotEmpty()) View.VISIBLE else View.GONE
         binding.tvNoAlbums.visibility = if (albums.isEmpty()) View.VISIBLE else View.GONE

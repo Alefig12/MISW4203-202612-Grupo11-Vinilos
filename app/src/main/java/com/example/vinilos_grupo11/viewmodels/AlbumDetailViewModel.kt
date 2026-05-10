@@ -6,8 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.vinilos_grupo11.models.AlbumDetail
+import com.example.vinilos_grupo11.performance.PerformanceTracker
 import com.example.vinilos_grupo11.repositories.IAlbumRepository
+import kotlinx.coroutines.launch
 
 class AlbumDetailViewModel(
     application: Application,
@@ -32,20 +35,23 @@ class AlbumDetailViewModel(
     }
 
     private fun loadAlbumDetail() {
-        _isLoading.value = true
-        repository.getAlbumDetail(
-            albumId,
-            onSuccess = { detail ->
-                _albumDetail.postValue(detail)
-                _eventNetworkError.postValue(false)
-                _isNetworkErrorShown.postValue(false)
-                _isLoading.postValue(false)
-            },
-            onError = {
-                _eventNetworkError.postValue(true)
-                _isLoading.postValue(false)
+        viewModelScope.launch {
+            _isLoading.value = true
+            val t0 = PerformanceTracker.beginSection("HU02-AlbumDetail(id=$albumId)")
+            var success = false
+            try {
+                val detail = repository.fetchAlbumDetail(albumId)
+                _albumDetail.value = detail
+                _eventNetworkError.value = false
+                _isNetworkErrorShown.value = false
+                success = true
+            } catch (e: Exception) {
+                _eventNetworkError.value = true
+            } finally {
+                PerformanceTracker.endSection("HU02-AlbumDetail(id=$albumId)", t0, success)
+                _isLoading.value = false
             }
-        )
+        }
     }
 
     fun onNetworkErrorShown() {

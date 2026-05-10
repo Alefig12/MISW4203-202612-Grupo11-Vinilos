@@ -14,6 +14,7 @@ import com.example.vinilos_grupo11.viewmodels.ArtistViewModel
 import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
 import org.junit.Before
 import org.junit.After
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -22,6 +23,9 @@ import org.junit.runner.RunWith
  * Validan el flujo de navegación (OBJ-01) y la estabilidad (OBJ-03). */
 @RunWith(AndroidJUnit4::class)
 class ArtistsNavigationTest {
+
+    @get:Rule
+    val disableAnimations = DisableAnimationsRule()
 
     @Before
     fun setUp() {

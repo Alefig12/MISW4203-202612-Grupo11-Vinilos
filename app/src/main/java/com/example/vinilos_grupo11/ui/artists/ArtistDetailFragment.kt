@@ -7,15 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.vinilos_grupo11.databinding.FragmentArtistDetailBinding
-import com.example.vinilos_grupo11.viewmodels.ArtistDetailViewModel
-
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.vinilos_grupo11.R
+import com.example.vinilos_grupo11.databinding.FragmentArtistDetailBinding
 import com.example.vinilos_grupo11.ui.albums.AlbumListAdapter
-import androidx.recyclerview.widget.GridLayoutManager
+import com.example.vinilos_grupo11.viewmodels.ArtistDetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -42,52 +42,45 @@ class ArtistDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val artistId = arguments?.getInt("artistId") ?: -1
-        
-        val adapter = AlbumListAdapter().apply {
-            showArtistName = false
-        }
-        binding.rvArtistAlbums.adapter = adapter
+
+        val adapter = AlbumListAdapter().apply { showArtistName = false }
         binding.rvArtistAlbums.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvArtistAlbums.setHasFixedSize(true)
+        binding.rvArtistAlbums.adapter = adapter
 
         viewModel.artist.observe(viewLifecycleOwner) { artist ->
             artist?.let {
                 Log.d("ArtistDetailFragment", "Datos del artista recibidos: ${it.name}")
                 binding.tvArtistName.text = it.name
-                
-                // Formatear la fecha de nacimiento
+
                 val formattedDate = try {
                     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
                     inputFormat.timeZone = TimeZone.getTimeZone("UTC")
                     val date = inputFormat.parse(it.birthDate)
-                    
                     val outputFormat = if (Locale.getDefault().language == "es") {
                         SimpleDateFormat("MMMM d 'de' yyyy", Locale.getDefault())
                     } else {
                         SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
                     }
-                    
-                    date?.let { d -> 
+                    date?.let { d ->
                         outputFormat.format(d).replaceFirstChar { char -> char.uppercase() }
                     } ?: it.birthDate
                 } catch (e: Exception) {
                     it.birthDate
                 }
 
-                // Formatear Fecha | Descripción (Salmon y Bold en el XML)
-                val detailText = "$formattedDate | ${it.description}"
-                binding.tvArtistDetail.text = detailText
+                binding.tvArtistDetail.text = "$formattedDate | ${it.description}"
 
-                // Cargar imagen con Glide
                 Glide.with(this)
                     .load(it.image)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .placeholder(R.drawable.placeholder_no_photo)
                     .error(R.drawable.placeholder_no_photo)
                     .transform(CenterCrop(), RoundedCorners(24))
                     .into(binding.ivArtistImage)
 
-                // Lista de álbumes con el mismo estilo que el catálogo
                 if (it.albums.isNotEmpty()) {
-                    adapter.albums = it.albums
+                    adapter.submitList(it.albums)
                     binding.tvAlbumsHeader.visibility = View.VISIBLE
                     binding.rvArtistAlbums.visibility = View.VISIBLE
                 } else {

@@ -10,6 +10,7 @@ import com.example.vinilos_grupo11.ui.MainActivity
 import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -17,6 +18,9 @@ import org.junit.runner.RunWith
 class AlbumsScreenTest {
 
     private val fakeRepo = FakeAlbumRepository(shouldFail = false)
+
+    @get:Rule
+    val disableAnimations = DisableAnimationsRule()
 
     @Before
     fun setUp() {

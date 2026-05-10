@@ -45,8 +45,9 @@ class CollectorsFragment : Fragment() {
                 bundle
             )
         }
-        binding.rvCollectors.adapter = adapter
         binding.rvCollectors.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvCollectors.setHasFixedSize(true)
+        binding.rvCollectors.adapter = adapter
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

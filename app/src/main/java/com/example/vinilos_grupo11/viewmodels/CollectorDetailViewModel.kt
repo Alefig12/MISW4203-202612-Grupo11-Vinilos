@@ -5,11 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.vinilos_grupo11.models.Collector
+import com.example.vinilos_grupo11.performance.PerformanceTracker
 import com.example.vinilos_grupo11.repositories.CollectorRepository
 import com.example.vinilos_grupo11.repositories.ICollectorRepository
+import kotlinx.coroutines.launch
 
 class CollectorDetailViewModel(private val repository: ICollectorRepository) : ViewModel() {
 
@@ -23,19 +26,20 @@ class CollectorDetailViewModel(private val repository: ICollectorRepository) : V
     val hasError: LiveData<Boolean> = _hasError
 
     fun loadCollectorDetail(collectorId: Int) {
-        _isLoading.value = true
-        _hasError.value = false
-        repository.getCollectorDetail(
-            collectorId = collectorId,
-            onSuccess = { collectorDetail ->
-                _collector.postValue(collectorDetail)
-                _isLoading.postValue(false)
-            },
-            onError = {
-                _hasError.postValue(true)
-                _isLoading.postValue(false)
+        viewModelScope.launch {
+            _isLoading.value = true
+            _hasError.value = false
+            val t0 = PerformanceTracker.beginSection("HU06-CollectorDetail(id=$collectorId)")
+            val result = repository.fetchCollectorDetail(collectorId)
+            val success = result != null
+            PerformanceTracker.endSection("HU06-CollectorDetail(id=$collectorId)", t0, success)
+            if (success) {
+                _collector.value = result
+            } else {
+                _hasError.value = true
             }
-        )
+            _isLoading.value = false
+        }
     }
 
     companion object {
@@ -50,4 +54,3 @@ class CollectorDetailViewModel(private val repository: ICollectorRepository) : V
         }
     }
 }
-
