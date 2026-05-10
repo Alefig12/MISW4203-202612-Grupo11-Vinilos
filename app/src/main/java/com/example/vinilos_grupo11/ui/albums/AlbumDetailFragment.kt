@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.application.VinilosApplication
@@ -80,6 +81,7 @@ class AlbumDetailFragment : Fragment() {
     private fun renderAlbum(detail: AlbumDetail) {
         Glide.with(this)
             .load(detail.cover)
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.ivAlbumCover)
 

@@ -2,6 +2,7 @@ package com.example.vinilos_grupo11.repositories
 
 import android.content.Context
 import com.example.vinilos_grupo11.database.dao.ArtistDao
+import com.example.vinilos_grupo11.database.dao.ArtistDetailDao
 import com.example.vinilos_grupo11.models.Artist
 import com.example.vinilos_grupo11.network.ArtistServiceAdapter
 
@@ -9,6 +10,7 @@ class ArtistRepository(context: Context) : IArtistRepository {
 
     private val serviceAdapter = ArtistServiceAdapter(context)
     private val dao = ArtistDao
+    private val detailDao = ArtistDetailDao
 
     override fun getArtists(
         onSuccess: (List<Artist>) -> Unit,
@@ -33,13 +35,18 @@ class ArtistRepository(context: Context) : IArtistRepository {
         onSuccess: (Artist) -> Unit,
         onError: () -> Unit
     ) {
+        val cached = detailDao.get(artistId)
+        if (cached != null) {
+            onSuccess(cached)
+            return
+        }
         serviceAdapter.getArtistDetail(
             artistId = artistId,
             onSuccess = { artist ->
+                detailDao.put(artistId, artist)
                 onSuccess(artist)
             },
             onError = { onError() }
         )
     }
 }
-

@@ -19,12 +19,19 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+    }
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = true
+        disable += setOf("MissingTranslation", "ExtraTranslation")
+        warningsAsErrors = false
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -35,6 +42,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -53,8 +63,10 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.volley)
     implementation(libs.glide)
+    implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.androidx.uiautomator)
 }

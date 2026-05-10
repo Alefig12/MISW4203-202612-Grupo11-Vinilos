@@ -5,11 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.vinilos_grupo11.models.Artist
+import com.example.vinilos_grupo11.performance.PerformanceTracker
 import com.example.vinilos_grupo11.repositories.ArtistRepository
 import com.example.vinilos_grupo11.repositories.IArtistRepository
+import kotlinx.coroutines.launch
 
 class ArtistDetailViewModel(private val repository: IArtistRepository) : ViewModel() {
 
@@ -23,19 +26,20 @@ class ArtistDetailViewModel(private val repository: IArtistRepository) : ViewMod
     val hasError: LiveData<Boolean> = _hasError
 
     fun loadArtistDetail(artistId: Int) {
-        _isLoading.value = true
-        _hasError.value = false
-        repository.getArtistDetail(
-            artistId = artistId,
-            onSuccess = { artistDetail ->
-                _artist.postValue(artistDetail)
-                _isLoading.postValue(false)
-            },
-            onError = {
-                _hasError.postValue(true)
-                _isLoading.postValue(false)
+        viewModelScope.launch {
+            _isLoading.value = true
+            _hasError.value = false
+            val t0 = PerformanceTracker.beginSection("HU04-ArtistDetail(id=$artistId)")
+            val result = repository.fetchArtistDetail(artistId)
+            val success = result != null
+            PerformanceTracker.endSection("HU04-ArtistDetail(id=$artistId)", t0, success)
+            if (success) {
+                _artist.value = result
+            } else {
+                _hasError.value = true
             }
-        )
+            _isLoading.value = false
+        }
     }
 
     companion object {

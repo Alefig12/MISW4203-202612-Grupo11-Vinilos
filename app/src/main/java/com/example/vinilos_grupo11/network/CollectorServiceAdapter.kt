@@ -4,6 +4,8 @@ import android.content.Context
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.models.Album
 import com.example.vinilos_grupo11.models.Collector
@@ -100,38 +102,39 @@ class CollectorServiceAdapter(private val context: Context) {
         onSuccess: (List<Album>) -> Unit,
         onError: (Exception) -> Unit
     ) {
-        val baseUrl = context.getString(R.string.base_url)
-        val request = JsonArrayRequest(
-            "${baseUrl}/albums",
-            { response ->
-                try {
-                    val albumsById = parseAlbums(response).associateBy { it.albumId }
-                    onSuccess(albumIds.mapNotNull { albumsById[it] })
-                } catch (e: Exception) {
-                    onError(e)
-                }
-            },
-            { error -> onError(error) }
-        )
-        networkAdapter.addToRequestQueue(request)
-    }
+        if (albumIds.isEmpty()) { onSuccess(emptyList()); return }
 
-    private fun parseAlbums(jsonArray: JSONArray): List<Album> {
-        val albums = mutableListOf<Album>()
-        for (i in 0 until jsonArray.length()) {
-            val item = jsonArray.getJSONObject(i)
-            albums.add(
-                Album(
-                    albumId = item.getInt("id"),
-                    name = item.getString("name"),
-                    cover = item.optString("cover", ""),
-                    releaseDate = item.optString("releaseDate", ""),
-                    description = item.optString("description", ""),
-                    genre = item.optString("genre", ""),
-                    recordLabel = item.optString("recordLabel", "")
-                )
+        val baseUrl = context.getString(R.string.base_url)
+        val results = arrayOfNulls<Album>(albumIds.size)
+        val remaining = AtomicInteger(albumIds.size)
+        val failed = AtomicBoolean(false)
+
+        albumIds.forEachIndexed { index, albumId ->
+            val request = JsonObjectRequest(
+                Request.Method.GET,
+                "${baseUrl}/albums/$albumId",
+                null,
+                { response ->
+                    try {
+                        results[index] = Album(
+                            albumId = response.getInt("id"),
+                            name = response.optString("name", ""),
+                            cover = response.optString("cover", ""),
+                            releaseDate = response.optString("releaseDate", ""),
+                            description = response.optString("description", ""),
+                            genre = response.optString("genre", ""),
+                            recordLabel = response.optString("recordLabel", "")
+                        )
+                        if (remaining.decrementAndGet() == 0 && !failed.get()) {
+                            onSuccess(results.filterNotNull())
+                        }
+                    } catch (e: Exception) {
+                        if (!failed.getAndSet(true)) onError(e)
+                    }
+                },
+                { error -> if (!failed.getAndSet(true)) onError(error) }
             )
+            networkAdapter.addToRequestQueue(request)
         }
-        return albums
     }
 }

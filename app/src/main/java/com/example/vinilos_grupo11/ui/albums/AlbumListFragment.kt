@@ -38,6 +38,7 @@ class AlbumListFragment: Fragment() {
 
         adapter = AlbumListAdapter()
         binding.albumsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        binding.albumsRecyclerView.setHasFixedSize(true)
         binding.albumsRecyclerView.adapter = adapter
 
         adapter.onAlbumClick = { albumId ->
@@ -56,7 +57,7 @@ class AlbumListFragment: Fragment() {
         ).get(AlbumListViewModel::class.java)
 
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
-            adapter.albums = albums
+            adapter.submitList(albums)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->

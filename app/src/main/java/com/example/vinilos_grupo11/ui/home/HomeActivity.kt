@@ -3,6 +3,7 @@ package com.example.vinilos_grupo11.ui.home
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.example.vinilos_grupo11.databinding.ActivityHomeBinding
 import com.example.vinilos_grupo11.ui.MainActivity
 
@@ -12,6 +13,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
