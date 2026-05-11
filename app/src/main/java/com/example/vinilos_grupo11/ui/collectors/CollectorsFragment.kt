@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.FragmentCollectorsBinding
@@ -35,9 +36,18 @@ class CollectorsFragment : Fragment() {
 
         setupHeader()
 
-        val adapter = CollectorAdapter()
-        binding.rvCollectors.adapter = adapter
+        val adapter = CollectorAdapter { collectorId ->
+            val bundle = Bundle().apply {
+                putInt("collectorId", collectorId)
+            }
+            findNavController().navigate(
+                R.id.action_collectorListFragment_to_collectorDetailFragment,
+                bundle
+            )
+        }
         binding.rvCollectors.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvCollectors.setHasFixedSize(true)
+        binding.rvCollectors.adapter = adapter
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

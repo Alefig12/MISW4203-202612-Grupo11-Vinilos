@@ -1,12 +1,12 @@
 package com.example.vinilos_grupo11
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.vinilos_grupo11.fake.FakeAlbumRepository
 import com.example.vinilos_grupo11.fake.FakeCollectorRepository
@@ -29,7 +29,7 @@ class CollectorsScreenTest {
     private val fakeRepo = FakeCollectorRepository(shouldFail = false)
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val disableAnimations = DisableAnimationsRule()
 
     @Before
     fun setUp() {
@@ -49,8 +49,10 @@ class CollectorsScreenTest {
      */
     @Test
     fun tc_hu05_01_collectorsTitleIsDisplayed() {
-        onView(withId(R.id.collectorListFragment)).perform(click())
-        onView(withId(R.id.tv_collectors_header)).check(matches(isDisplayed()))
+        ActivityScenario.launch(MainActivity::class.java).use {
+            onView(withId(R.id.collectorListFragment)).perform(click())
+            onView(withId(R.id.tv_collectors_header)).check(matches(isDisplayed()))
+        }
     }
 
     /**
@@ -59,10 +61,12 @@ class CollectorsScreenTest {
      */
     @Test
     fun tc_hu05_02_collectorsNamesAreDisplayed() {
-        onView(withId(R.id.collectorListFragment)).perform(click())
-        onView(withId(R.id.rv_collectors)).check(matches(isDisplayed()))
-        fakeRepo.fakeCollectors.forEach { collector ->
-            onView(withText(collector.name)).check(matches(isDisplayed()))
+        ActivityScenario.launch(MainActivity::class.java).use {
+            onView(withId(R.id.collectorListFragment)).perform(click())
+            onView(withId(R.id.rv_collectors)).check(matches(isDisplayed()))
+            fakeRepo.fakeCollectors.forEach { collector ->
+                onView(withText(collector.name)).check(matches(isDisplayed()))
+            }
         }
     }
 }

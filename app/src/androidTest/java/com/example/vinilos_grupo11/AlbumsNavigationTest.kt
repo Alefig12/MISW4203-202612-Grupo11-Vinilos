@@ -9,13 +9,18 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.vinilos_grupo11.fake.FakeAlbumRepository
 import com.example.vinilos_grupo11.ui.MainActivity
 import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AlbumsNavigationTest {
+
+    @get:Rule
+    val disableAnimations = DisableAnimationsRule()
 
     @Before
     fun setUp() {
@@ -46,6 +51,21 @@ class AlbumsNavigationTest {
         AlbumListViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
         ActivityScenario.launch(MainActivity::class.java).use {
             onView(withId(R.id.tv_catalog_header)).check(matches(isDisplayed()))
+        }
+    }
+
+    /**
+     * TC-HU01-03 (stale-while-revalidate): Cuando hay datos en caché y la red falla,
+     * el catálogo de álbumes sigue visible con datos cacheados y no muestra error.
+     */
+    @Test
+    fun albumsAreShownFromCacheWhenNetworkFails() {
+        AlbumListViewModel.testRepositoryFactory = { _ ->
+            FakeAlbumRepository(shouldFail = true, hasCachedAlbums = true)
+        }
+        ActivityScenario.launch(MainActivity::class.java).use {
+            onView(withId(R.id.albumsRecyclerView)).check(matches(isDisplayed()))
+            onView(withId(R.id.tv_albums_error)).check(matches(not(isDisplayed())))
         }
     }
 }

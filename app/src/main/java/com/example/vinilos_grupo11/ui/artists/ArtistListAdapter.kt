@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -16,17 +17,19 @@ import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemArtistBinding
 import com.example.vinilos_grupo11.models.Artist
 
-class ArtistListAdapter : ListAdapter<Artist, ArtistListAdapter.ViewHolder>(DiffCallback()) {
+class ArtistListAdapter(private val onArtistClick: (Int) -> Unit) : ListAdapter<Artist, ArtistListAdapter.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemArtistBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(artist: Artist) {
+            binding.root.setOnClickListener { onArtistClick(artist.id) }
             binding.tvArtistName.text = artist.name
             
             binding.tvNoPhoto.visibility = View.GONE
             
             Glide.with(binding.ivArtistImage.context)
                 .load(artist.image)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,

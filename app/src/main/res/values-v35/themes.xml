@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.BackVynilsappgrupo11" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@color/vinilos_background</item>
+        <item name="colorPrimary">@color/vinilos_salmon</item>
+        <item name="colorPrimaryDark">@color/vinilos_background</item>
+        <item name="colorAccent">@color/vinilos_orange</item>
+        <item name="colorSurface">@color/vinilos_surface</item>
+        <item name="android:textColorPrimary">@color/vinilos_text_primary</item>
+        <item name="android:textColorSecondary">@color/vinilos_text_secondary</item>
+        <item name="android:statusBarColor">@color/vinilos_background</item>
+        <item name="android:navigationBarColor">@color/vinilos_background</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+    </style>
+</resources>

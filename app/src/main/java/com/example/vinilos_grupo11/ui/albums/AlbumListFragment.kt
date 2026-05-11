@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.application.VinilosApplication
@@ -36,7 +38,16 @@ class AlbumListFragment: Fragment() {
 
         adapter = AlbumListAdapter()
         binding.albumsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        binding.albumsRecyclerView.setHasFixedSize(true)
         binding.albumsRecyclerView.adapter = adapter
+
+        adapter.onAlbumClick = { albumId ->
+            val bundle = bundleOf("albumId" to albumId)
+            findNavController().navigate(
+                R.id.action_albumListFragment_to_albumDetailFragment,
+                bundle
+            )
+        }
 
         val app = requireActivity().application as VinilosApplication
         val repo = AlbumListViewModel.testRepositoryFactory?.invoke(app) ?: app.albumRepository
@@ -46,7 +57,7 @@ class AlbumListFragment: Fragment() {
         ).get(AlbumListViewModel::class.java)
 
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
-            adapter.albums = albums
+            adapter.submitList(albums)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->

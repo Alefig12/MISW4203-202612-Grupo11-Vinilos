@@ -59,19 +59,69 @@ Los resultados quedan en:
 app/build/reports/androidTests/connected/
 ```
 
+### Suite de pruebas (Sprint 2)
+
+| Clase de prueba | HU | Casos de prueba |
+|---|---|---|
+| `AlbumsScreenTest` | HU01 | Catálogo de álbumes: carga, error, caché |
+| `AlbumsNavigationTest` | HU01 | Navegación y menú inferior |
+| `AlbumDetailScreenTest` | HU02 | Detalle de álbum: nombre, género, tracks, error |
+| `AlbumDetailNavigationTest` | HU02 | Navegar a detalle y volver a la lista |
+| `ArtistsScreenTest` | HU03 | Catálogo de artistas: carga, error |
+| `ArtistsNavigationTest` | HU03 | Navegación al tab de artistas |
+| `ArtistDetailScreenTest` | HU04 | Detalle de artista: nombre, descripción, error |
+| `ArtistDetailNavigationTest` | HU04 | Navegar a detalle y volver a la lista |
+| `CollectorsScreenTest` | HU05 | Catálogo de coleccionistas: carga, error |
+| `CollectorsNavigationTest` | HU05 | Navegación al tab de coleccionistas |
+| `CollectorDetailScreenTest` | HU06 | Detalle de coleccionista: nombre, email, error |
+| `CollectorDetailNavigationTest` | HU06 | Navegar a detalle y volver a la lista |
+
+Todos los tests usan repositorios falsos (`FakeAlbumRepository`, `FakeArtistRepository`, `FakeCollectorRepository`) para no depender de la red.
+
+## Pruebas de desempeño en dispositivo físico
+
+La app registra automáticamente métricas de tiempo de respuesta para cada historia de usuario usando `PerformanceTracker` (tag Logcat: `VinilosPerf`).
+
+### Capturar métricas
+
+1. Instala el APK en el dispositivo y conecta por USB con depuración habilitada
+2. Limpia el buffer y empieza la captura:
+   ```bash
+   adb logcat -c
+   adb logcat -s VinilosPerf > metricas_dispositivo.txt
+   ```
+3. Usa la app: abre cada catálogo y toca al menos 3 elementos de detalle por sección
+4. Detén la captura con `Ctrl + C`
+
+### Formato de las métricas
+
+```
+METRIC | story=HU01-AlbumCatalog | device=samsung SM-S938B (API 36) | duration=6622ms | result=ok
+METRIC | story=HU04-AlbumDetail(id=101) | device=... | duration=688ms | result=ok
+```
+
+Las historias medidas son: `HU01-AlbumCatalog`, `HU02-AlbumDetail`, `HU03-ArtistCatalog`, `HU04-ArtistDetail`, `HU05-CollectorCatalog`, `HU06-CollectorDetail`.
+
 ## Estructura del proyecto
 
 ```
 app/src/main/java/com/example/vinilos_grupo11/
 ├── application/       # VinilosApplication (inicialización de Volley y repositorios)
-├── database/dao/      # DAOs en memoria (caché)
-├── models/            # Modelos de datos (Album, Collector)
+├── database/dao/      # DAOs en memoria (caché de álbumes, artistas y coleccionistas)
+├── models/            # Modelos de datos (Album, AlbumDetail, Artist, Collector, Track...)
 ├── network/           # Adaptadores de red (Volley)
-├── repositories/      # Repositorios e interfaces
+├── performance/       # PerformanceTracker (métricas de desempeño por HU)
+├── repositories/      # Repositorios e interfaces (IAlbumRepository, IArtistRepository, ICollectorRepository)
 ├── ui/
 │   ├── home/          # HomeActivity (pantalla de selección de rol)
-│   ├── albums/        # Catálogo de álbumes
-│   ├── artists/       # Catálogo de artistas
-│   └── collectors/    # Catálogo de coleccionistas
-└── viewmodels/        # ViewModels (MVVM)
+│   ├── albums/        # Catálogo y detalle de álbumes (HU01, HU04)
+│   ├── artists/       # Catálogo y detalle de artistas (HU02, HU03)
+│   └── collectors/    # Catálogo y detalle de coleccionistas (HU05, HU06)
+└── viewmodels/        # ViewModels (MVVM): AlbumListViewModel, AlbumDetailViewModel, etc.
+
+app/src/androidTest/java/com/example/vinilos_grupo11/
+├── fake/              # Repositorios falsos para pruebas (sin red)
+├── DisableAnimationsRule.kt  # JUnit Rule para deshabilitar animaciones en tests
+├── *ScreenTest.kt     # Pruebas E2E de contenido de pantalla
+└── *NavigationTest.kt # Pruebas de navegación entre pantallas
 ```

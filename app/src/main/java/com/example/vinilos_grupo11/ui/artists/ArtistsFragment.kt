@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.FragmentArtistsBinding
@@ -35,16 +36,19 @@ class ArtistsFragment : Fragment() {
 
         setupHeader()
 
-        val adapter = ArtistListAdapter()
-        binding.rvArtists.adapter = adapter
+        val adapter = ArtistListAdapter { artistId ->
+            val bundle = Bundle().apply { putInt("artistId", artistId) }
+            findNavController().navigate(R.id.artistDetailFragment, bundle)
+        }
         binding.rvArtists.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvArtists.setHasFixedSize(true)
+        binding.rvArtists.adapter = adapter
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.hasError.observe(viewLifecycleOwner) { hasError ->
-            // En el nuevo layout no hay tvError, podrías manejarlo con un Toast si prefieres
             binding.rvArtists.visibility = if (hasError) View.GONE else View.VISIBLE
         }
 

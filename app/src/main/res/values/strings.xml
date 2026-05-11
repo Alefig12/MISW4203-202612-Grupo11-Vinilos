@@ -14,8 +14,21 @@
     <string name="btn_collector">COLECCIONISTA</string>
     <string name="base_url" translatable="false">https://backvynils-q6yc.onrender.com</string>
     <string name="catalog_header">Catálogo de Álbumes (%1$s)</string>
+    <string name="artist_image_desc">Imagen del artista</string>
+    <string name="albums_title">Álbumes</string>
     <string name="back_description">Regresar</string>
     <string name="artists_catalog_header">Catálogo de Artistas (%1$s)</string>
     <string name="collectors_catalog_header">Catálogo de Coleccionistas (%1$s)</string>
     <string name="no_photo">No Photo</string>
+    <string name="track_list_header">Lista de Canciones</string>
+    <string name="tracks_summary">%1$d PISTAS • %2$s TOTAL</string>
+    <string name="album_detail_error">Error al cargar el detalle del álbum</string>
+    <string name="album_label">Álbum</string>
+    <string name="collector_label">Coleccionista</string>
+    <string name="collector_image_desc">Imagen del coleccionista</string>
+    <string name="collector_email_label">Correo electrónico</string>
+    <string name="collector_phone_label">Teléfono</string>
+    <string name="collector_albums_title">Álbumes favoritos</string>
+    <string name="collector_no_albums">Este coleccionista no tiene álbumes favoritos para mostrar.</string>
+    <string name="collector_detail_error">Error al cargar el detalle del coleccionista</string>
 </resources>

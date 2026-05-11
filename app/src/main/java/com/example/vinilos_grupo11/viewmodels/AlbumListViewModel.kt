@@ -6,8 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.vinilos_grupo11.models.Album
+import com.example.vinilos_grupo11.performance.PerformanceTracker
 import com.example.vinilos_grupo11.repositories.IAlbumRepository
+import kotlinx.coroutines.launch
 
 class AlbumListViewModel(application: Application, private val repository: IAlbumRepository) :
     AndroidViewModel(application) {
@@ -29,19 +32,34 @@ class AlbumListViewModel(application: Application, private val repository: IAlbu
     }
 
     private fun refreshDataFromNetwork() {
-        _isLoading.value = true
-        repository.refreshData(
-            onSuccess = { albums ->
-                _albums.postValue(albums)
-                _eventNetworkError.postValue(false)
-                _isNetworkErrorShown.postValue(false)
-                _isLoading.postValue(false)
-            },
-            onError = {
-                _eventNetworkError.postValue(true)
-                _isLoading.postValue(false)
+        viewModelScope.launch {
+            val t0 = PerformanceTracker.beginSection("HU01-AlbumCatalog")
+            var success = false
+
+            // Show cached data immediately — user sees content with no spinner
+            val cached = repository.getCachedAlbums()
+            if (cached != null) {
+                _albums.value = cached
+            } else {
+                _isLoading.value = true
             }
-        )
+
+            try {
+                val fresh = repository.fetchFreshAlbums()
+                _albums.value = fresh
+                _eventNetworkError.value = false
+                _isNetworkErrorShown.value = false
+                success = true
+            } catch (e: Exception) {
+                // Only show error if user has no data to look at
+                if (cached == null) {
+                    _eventNetworkError.value = true
+                }
+            } finally {
+                PerformanceTracker.endSection("HU01-AlbumCatalog", t0, success)
+                _isLoading.value = false
+            }
+        }
     }
 
     fun onNetworkErrorShown() {
