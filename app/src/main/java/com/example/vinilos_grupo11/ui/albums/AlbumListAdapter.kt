@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemAlbumBinding
 import com.example.vinilos_grupo11.models.Album
 
@@ -48,6 +49,9 @@ class AlbumListAdapter : ListAdapter<Album, AlbumListAdapter.AlbumViewHolder>(Di
             binding.tvAlbumArtist.visibility = if (showArtistName) View.VISIBLE else View.GONE
             binding.tvNoPhoto.visibility = View.GONE
 
+            binding.root.contentDescription = binding.root.context.getString(
+                R.string.cd_album_item, album.name, album.genre
+            )
             binding.root.setOnClickListener { onAlbumClick?.invoke(album.albumId) }
 
             Glide.with(binding.ivAlbumCover.context)

@@ -1,6 +1,7 @@
 package com.example.vinilos_grupo11.fake
 
 import com.example.vinilos_grupo11.models.Album
+import com.example.vinilos_grupo11.models.AlbumCreateRequest
 import com.example.vinilos_grupo11.models.AlbumDetail
 import com.example.vinilos_grupo11.models.CommentSummary
 import com.example.vinilos_grupo11.models.PerformerSummary
@@ -57,6 +58,28 @@ class FakeAlbumRepository(
             onError(Exception("Network Error"))
         } else {
             onSuccess(fakeAlbumDetail)
+        }
+    }
+
+    override fun createAlbum(
+        request: AlbumCreateRequest,
+        onSuccess: (Album) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        if (shouldFail) {
+            onError(Exception("Network Error"))
+        } else {
+            onSuccess(
+                Album(
+                    albumId = 99,
+                    name = request.name,
+                    cover = request.cover,
+                    releaseDate = request.releaseDate,
+                    description = request.description,
+                    genre = request.genre,
+                    recordLabel = request.recordLabel
+                )
+            )
         }
     }
 }

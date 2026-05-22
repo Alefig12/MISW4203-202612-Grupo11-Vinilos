@@ -20,6 +20,7 @@ navigationFragment = "2.7.7"
 volley = "1.2.1"
 glide = "4.16.0"
 coroutines = "1.8.1"
+swiperefreshlayout = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,7 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

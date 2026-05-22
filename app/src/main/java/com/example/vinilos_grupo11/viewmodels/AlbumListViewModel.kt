@@ -66,6 +66,10 @@ class AlbumListViewModel(application: Application, private val repository: IAlbu
         _isNetworkErrorShown.value = true
     }
 
+    fun refreshAlbums() {
+        refreshDataFromNetwork()
+    }
+
     companion object {
         var testRepositoryFactory: ((Application) -> IAlbumRepository)? = null
     }

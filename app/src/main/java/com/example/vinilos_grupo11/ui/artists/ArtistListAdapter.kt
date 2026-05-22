@@ -22,9 +22,12 @@ class ArtistListAdapter(private val onArtistClick: (Int) -> Unit) : ListAdapter<
     inner class ViewHolder(private val binding: ItemArtistBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(artist: Artist) {
+            binding.root.contentDescription = binding.root.context.getString(
+                R.string.cd_artist_item, artist.name
+            )
             binding.root.setOnClickListener { onArtistClick(artist.id) }
             binding.tvArtistName.text = artist.name
-            
+
             binding.tvNoPhoto.visibility = View.GONE
             
             Glide.with(binding.ivArtistImage.context)
