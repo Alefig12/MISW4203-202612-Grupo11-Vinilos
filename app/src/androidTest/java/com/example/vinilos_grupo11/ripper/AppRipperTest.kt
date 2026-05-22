@@ -97,12 +97,17 @@ class AppRipperTest {
         device.wait(Until.hasObject(By.res(PACKAGE, "albumsRecyclerView")), LIST_TIMEOUT)
         Thread.sleep(500)
 
-        val rv = device.findObject(By.res(PACKAGE, "albumsRecyclerView"))
-        val items = rv?.findObjects(By.clickable(true)) ?: emptyList()
-        Log.i(TAG, "RIPPER | screen=AlbumList | found=${items.size} clickable items")
+        // Cuenta inicial de items (referencia válida solo antes de navegar)
+        val initialCount = device.findObject(By.res(PACKAGE, "albumsRecyclerView"))
+            ?.findObjects(By.clickable(true))?.size ?: 0
+        Log.i(TAG, "RIPPER | screen=AlbumList | found=$initialCount clickable items")
 
-        items.take(3).forEachIndexed { i, item ->
-            Log.i(TAG, "RIPPER | action=tap_album | index=$i | text=${item.text}")
+        // Re-busca el primer item en CADA iteración para evitar StaleObjectException:
+        // después de pressBack() el RecyclerView se reconstruye e invalida referencias previas.
+        repeat(minOf(initialCount, 3)) { i ->
+            val item = device.findObject(By.res(PACKAGE, "albumsRecyclerView"))
+                ?.findObjects(By.clickable(true))?.firstOrNull() ?: return@repeat
+            Log.i(TAG, "RIPPER | action=tap_album | index=$i")
             item.click()
             device.wait(Until.hasObject(By.res(PACKAGE, "tv_album_name")), UI_TIMEOUT)
             Thread.sleep(500)
@@ -129,12 +134,14 @@ class AppRipperTest {
         Thread.sleep(500)
         Log.i(TAG, "RIPPER | screen=ArtistList | action=explore_catalog")
 
-        val rv = device.findObject(By.res(PACKAGE, "rv_artists"))
-        val items = rv?.findObjects(By.clickable(true)) ?: emptyList()
-        Log.i(TAG, "RIPPER | screen=ArtistList | found=${items.size} clickable items")
+        val initialCount = device.findObject(By.res(PACKAGE, "rv_artists"))
+            ?.findObjects(By.clickable(true))?.size ?: 0
+        Log.i(TAG, "RIPPER | screen=ArtistList | found=$initialCount clickable items")
 
-        items.take(3).forEachIndexed { i, item ->
-            Log.i(TAG, "RIPPER | action=tap_artist | index=$i | text=${item.text}")
+        repeat(minOf(initialCount, 3)) { i ->
+            val item = device.findObject(By.res(PACKAGE, "rv_artists"))
+                ?.findObjects(By.clickable(true))?.firstOrNull() ?: return@repeat
+            Log.i(TAG, "RIPPER | action=tap_artist | index=$i")
             item.click()
             device.wait(Until.hasObject(By.res(PACKAGE, "tvArtistName")), UI_TIMEOUT)
             Thread.sleep(500)
@@ -161,12 +168,14 @@ class AppRipperTest {
         Thread.sleep(500)
         Log.i(TAG, "RIPPER | screen=CollectorList | action=explore_catalog")
 
-        val rv = device.findObject(By.res(PACKAGE, "rv_collectors"))
-        val items = rv?.findObjects(By.clickable(true)) ?: emptyList()
-        Log.i(TAG, "RIPPER | screen=CollectorList | found=${items.size} clickable items")
+        val initialCount = device.findObject(By.res(PACKAGE, "rv_collectors"))
+            ?.findObjects(By.clickable(true))?.size ?: 0
+        Log.i(TAG, "RIPPER | screen=CollectorList | found=$initialCount clickable items")
 
-        items.take(3).forEachIndexed { i, item ->
-            Log.i(TAG, "RIPPER | action=tap_collector | index=$i | text=${item.text}")
+        repeat(minOf(initialCount, 3)) { i ->
+            val item = device.findObject(By.res(PACKAGE, "rv_collectors"))
+                ?.findObjects(By.clickable(true))?.firstOrNull() ?: return@repeat
+            Log.i(TAG, "RIPPER | action=tap_collector | index=$i")
             item.click()
             device.wait(Until.hasObject(By.res(PACKAGE, "tv_collector_name")), UI_TIMEOUT)
             Thread.sleep(500)

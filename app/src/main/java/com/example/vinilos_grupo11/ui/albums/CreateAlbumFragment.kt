@@ -101,6 +101,14 @@ class CreateAlbumFragment : Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    // Cuando la Activity se cierra programáticamente (finish() / ActivityScenario.close())
+                    // el NavController re-dispara onBackPressed como parte del cleanup de la pila.
+                    // En ese caso no mostramos el diálogo para no bloquear la destrucción.
+                    if (requireActivity().isFinishing) {
+                        isEnabled = false
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        return
+                    }
                     if (hasUnsavedChanges()) {
                         MaterialAlertDialogBuilder(requireContext())
                             .setTitle(R.string.create_album_unsaved_title)
