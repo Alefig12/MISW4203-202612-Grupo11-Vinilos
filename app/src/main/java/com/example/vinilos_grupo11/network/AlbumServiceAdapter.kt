@@ -11,6 +11,7 @@ import com.example.vinilos_grupo11.models.CommentSummary
 import com.example.vinilos_grupo11.models.PerformerSummary
 import com.example.vinilos_grupo11.models.Track
 import org.json.JSONObject
+import com.example.vinilos_grupo11.models.AlbumCreateRequest
 
 //Aquí irán todos los metodos para álbumes (get, post, put etc)
 
@@ -69,6 +70,46 @@ class AlbumServiceAdapter(private val context: Context, private val broker: Voll
             { error -> onError(error) }
         )
         broker.requestQueue.add(request)
+    }
+
+    fun createAlbum(
+        request: AlbumCreateRequest,
+        onSuccess: (Album) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        val baseUrl = context.getString(R.string.base_url)
+        val body = JSONObject().apply {
+            put("name", request.name)
+            put("cover", request.cover)
+            put("releaseDate", request.releaseDate)
+            put("description", request.description)
+            put("genre", request.genre)
+            put("recordLabel", request.recordLabel)
+        }
+        val req = JsonObjectRequest(
+            Request.Method.POST,
+            "${baseUrl}/albums",
+            body,
+            { response ->
+                try {
+                    onSuccess(
+                        Album(
+                            albumId = response.getInt("id"),
+                            name = response.getString("name"),
+                            cover = response.getString("cover"),
+                            releaseDate = response.getString("releaseDate"),
+                            description = response.getString("description"),
+                            genre = response.getString("genre"),
+                            recordLabel = response.getString("recordLabel")
+                        )
+                    )
+                } catch (e: Exception) {
+                    onError(e)
+                }
+            },
+            { error -> onError(error) }
+        )
+        broker.requestQueue.add(req)
     }
 
     private fun parseAlbumDetail(response: JSONObject): AlbumDetail {

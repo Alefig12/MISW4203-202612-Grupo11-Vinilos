@@ -48,4 +48,32 @@
     <string name="msg_confirm_exit">¿Deseas salir sin guardar los cambios?</string>
     <string name="btn_exit">Salir</string>
     <string name="btn_cancel">Cancelar</string>
+
+    <!-- Crear álbum -->
+    <string name="create_album_title">Nuevo Álbum</string>
+    <string name="create_album_name_hint">Nombre del álbum *</string>
+    <string name="create_album_cover_hint">URL de la portada *</string>
+    <string name="create_album_date_hint">Fecha de lanzamiento (AAAA-MM-DD) *</string>
+    <string name="create_album_description_hint">Descripción *</string>
+    <string name="create_album_genre_hint">Género *</string>
+    <string name="create_album_label_hint">Sello discográfico *</string>
+    <string name="create_album_save">Guardar álbum</string>
+    <string name="create_album_success">Álbum creado exitosamente</string>
+    <string name="create_album_error">Error al crear el álbum. Intenta de nuevo.</string>
+    <string name="create_album_validation_empty">Completa todos los campos obligatorios</string>
+    <string name="create_album_validation_date">Formato de fecha inválido. Usa AAAA-MM-DD</string>
+    <string name="create_album_validation_url">La URL de portada no es válida</string>
+    <string name="create_album_validation_date_future">La fecha de lanzamiento no puede ser futura</string>
+    <string name="create_album_validation_name_max">El nombre no puede superar los 100 caracteres</string>
+    <string name="create_album_validation_desc_max">La descripción no puede superar los 500 caracteres</string>
+    <string name="create_album_unsaved_title">Descartar cambios</string>
+    <string name="create_album_unsaved_message">Tienes cambios sin guardar. ¿Deseas salir?</string>
+    <string name="cd_fab_create_album">Crear nuevo álbum</string>
+
+    <!-- Accesibilidad -->
+    <string name="cd_loading">Cargando contenido</string>
+    <string name="cd_album_cover">Portada del álbum %1$s</string>
+    <string name="cd_album_item">Álbum: %1$s, %2$s. Doble toque para ver detalle</string>
+    <string name="cd_artist_item">Artista: %1$s. Doble toque para ver detalle</string>
+    <string name="cd_collector_item">Coleccionista: %1$s. Doble toque para ver detalle</string>
 </resources>

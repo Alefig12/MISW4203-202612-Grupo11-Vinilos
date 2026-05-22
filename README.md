@@ -59,7 +59,7 @@ Los resultados quedan en:
 app/build/reports/androidTests/connected/
 ```
 
-### Suite de pruebas (Sprint 2)
+### Suite de pruebas (Sprint 3)
 
 | Clase de prueba | HU | Casos de prueba |
 |---|---|---|
@@ -75,6 +75,8 @@ app/build/reports/androidTests/connected/
 | `CollectorsNavigationTest` | HU05 | Navegación al tab de coleccionistas |
 | `CollectorDetailScreenTest` | HU06 | Detalle de coleccionista: nombre, email, error |
 | `CollectorDetailNavigationTest` | HU06 | Navegar a detalle y volver a la lista |
+| `CreateAlbumScreenTest` | HU07 | Formulario visible, validación vacío, URL inválida, error de API |
+| `CreateAlbumNavigationTest` | HU07 | FAB por rol, navegar al formulario, volver, flujo completo |
 
 Todos los tests usan repositorios falsos (`FakeAlbumRepository`, `FakeArtistRepository`, `FakeCollectorRepository`) para no depender de la red.
 
@@ -100,7 +102,7 @@ METRIC | story=HU01-AlbumCatalog | device=samsung SM-S938B (API 36) | duration=6
 METRIC | story=HU04-AlbumDetail(id=101) | device=... | duration=688ms | result=ok
 ```
 
-Las historias medidas son: `HU01-AlbumCatalog`, `HU02-AlbumDetail`, `HU03-ArtistCatalog`, `HU04-ArtistDetail`, `HU05-CollectorCatalog`, `HU06-CollectorDetail`.
+Las historias medidas son: `HU01-AlbumCatalog`, `HU02-AlbumDetail`, `HU03-ArtistCatalog`, `HU04-ArtistDetail`, `HU05-CollectorCatalog`, `HU06-CollectorDetail`, `HU07-CreateAlbum`.
 
 ## Estructura del proyecto
 

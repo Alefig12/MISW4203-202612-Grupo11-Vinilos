@@ -62,10 +62,11 @@ class AlbumListFragment: Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (!isLoading) binding.swipeRefresh.isRefreshing = false
         }
 
         viewModel.eventNetworkError.observe(viewLifecycleOwner) { isError ->
-            binding.albumsRecyclerView.visibility = if (isError) View.GONE else View.VISIBLE
+            binding.swipeRefresh.visibility = if (isError) View.GONE else View.VISIBLE
             binding.tvAlbumsError.visibility = if (isError) View.VISIBLE else View.GONE
 
             if (isError && !viewModel.isNetworkErrorShown.value!!) {
@@ -73,6 +74,18 @@ class AlbumListFragment: Fragment() {
                 viewModel.onNetworkErrorShown()
             }
         }
+
+        binding.swipeRefresh.setOnRefreshListener { viewModel.refreshAlbums() }
+
+        findNavController().currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<Boolean>("album_created")
+            ?.observe(viewLifecycleOwner) { created ->
+                if (created == true) {
+                    findNavController().currentBackStackEntry?.savedStateHandle?.set("album_created", false)
+                    viewModel.refreshAlbums()
+                }
+            }
     }
 
     private fun setupHeaderAndTopBar() {
@@ -80,6 +93,13 @@ class AlbumListFragment: Fragment() {
         val userRole = sharedPref.getString("user_role", "Visitante") ?: "Visitante"
 
         binding.tvCatalogHeader.text = getString(R.string.catalog_header, userRole)
+
+        if (userRole == "Coleccionista") {
+            binding.fabCreateAlbum.visibility = View.VISIBLE
+            binding.fabCreateAlbum.setOnClickListener {
+                findNavController().navigate(R.id.action_albumListFragment_to_createAlbumFragment)
+            }
+        }
     }
 
     override fun onDestroyView() {
