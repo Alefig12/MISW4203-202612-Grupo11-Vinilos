@@ -77,6 +77,8 @@ app/build/reports/androidTests/connected/
 | `CollectorDetailNavigationTest` | HU06 | Navegar a detalle y volver a la lista |
 | `CreateAlbumScreenTest` | HU07 | Formulario visible, validación vacío, URL inválida, error de API |
 | `CreateAlbumNavigationTest` | HU07 | FAB por rol, navegar al formulario, volver, flujo completo |
+| `ripper/CreateAlbumRipperTest` | HU07 | Reconocimiento UIAutomator: inyección, dropdowns, DatePicker, navegación, flujo completo |
+| `ripper/AppRipperTest` | Toda la app | Reconocimiento UIAutomator: catálogos, detalles y flujo completo por rol Coleccionista |
 
 Todos los tests usan repositorios falsos (`FakeAlbumRepository`, `FakeArtistRepository`, `FakeCollectorRepository`) para no depender de la red.
 
@@ -123,7 +125,45 @@ app/src/main/java/com/example/vinilos_grupo11/
 
 app/src/androidTest/java/com/example/vinilos_grupo11/
 ├── fake/              # Repositorios falsos para pruebas (sin red)
+├── ripper/            # Pruebas de reconocimiento con UIAutomator (CreateAlbumRipperTest, AppRipperTest)
 ├── DisableAnimationsRule.kt  # JUnit Rule para deshabilitar animaciones en tests
 ├── *ScreenTest.kt     # Pruebas E2E de contenido de pantalla
 └── *NavigationTest.kt # Pruebas de navegación entre pantallas
+
+ripper/
+├── monkey_hu07.sh     # Script Monkey para HU07 (bash – macOS/Linux)
+└── monkey_hu07.ps1    # Script Monkey para HU07 (PowerShell – Windows)
 ```
+
+## Pruebas de reconocimiento con rippers
+
+### UIAutomator (código)
+
+Las pruebas en `ripper/` usan UIAutomator 2.x para explorar la UI de forma sistemática sin depender de la red (usan repositorios falsos):
+
+```bash
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.vinilos_grupo11.ripper.CreateAlbumRipperTest
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.vinilos_grupo11.ripper.AppRipperTest
+```
+
+Los logs del ripper se emiten con tag `VinilosRipper`:
+
+```bash
+adb logcat -s VinilosRipper
+```
+
+### Android Monkey (script)
+
+El Monkey inyecta eventos aleatorios sobre la app instalada. Requiere un dispositivo/emulador conectado con ADB:
+
+```bash
+# macOS / Linux
+chmod +x ripper/monkey_hu07.sh
+./ripper/monkey_hu07.sh [eventos] [semilla] [throttle_ms]
+./ripper/monkey_hu07.sh 500 42 200
+
+# Windows (PowerShell)
+.\ripper\monkey_hu07.ps1 -Events 500 -Seed 42 -Throttle 200
+```
+
+El script configura automáticamente el rol `Coleccionista` para que el FAB de creación sea accesible, ejecuta el Monkey y genera un reporte de crashes/ANRs en un archivo `monkey_hu07_<timestamp>.txt`.
