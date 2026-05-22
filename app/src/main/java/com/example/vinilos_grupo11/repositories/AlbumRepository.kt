@@ -64,4 +64,21 @@ class AlbumRepository(private val adapter: AlbumServiceAdapter) : IAlbumReposito
             onError = onError
         )
     }
+
+    override fun addTrackToAlbum(
+        albumId: Int,
+        track: com.example.vinilos_grupo11.models.Track,
+        onSuccess: (com.example.vinilos_grupo11.models.Track) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        adapter.addTrackToAlbum(
+            albumId,
+            track,
+            onSuccess = { newTrack ->
+                detailDao.remove(albumId)
+                onSuccess(newTrack)
+            },
+            onError = onError
+        )
+    }
 }

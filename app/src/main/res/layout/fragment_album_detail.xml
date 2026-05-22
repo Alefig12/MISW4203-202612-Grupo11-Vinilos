@@ -40,6 +40,29 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_associate_track"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:backgroundTint="#80000000"
+                    android:text="@string/btn_associate"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="1.5dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_album_cover"
+                    app:layout_constraintTop_toTopOf="@id/iv_album_cover"
+                    tools:visibility="visible" />
+
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
