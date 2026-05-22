@@ -31,4 +31,21 @@
     <string name="collector_albums_title">Álbumes favoritos</string>
     <string name="collector_no_albums">Este coleccionista no tiene álbumes favoritos para mostrar.</string>
     <string name="collector_detail_error">Error al cargar el detalle del coleccionista</string>
+    <string name="btn_associate">ASOCIAR</string>
+    <string name="add_track_title">Asociar Canción</string>
+    <string name="label_track_name">Nombre de la canción</string>
+    <string name="label_track_duration">Duración (MM:SS)</string>
+    <string name="btn_save_track">GUARDAR</string>
+    <string name="error_field_required">Este campo es requerido</string>
+    <string name="error_invalid_duration">Formato inválido (ej: 03:45)</string>
+    <string name="msg_track_added_success">Canción asociada exitosamente</string>
+    <string name="msg_track_added_error">Error al asociar la canción</string>
+
+    <!-- Confirmation Dialog -->
+    <string name="title_confirm_save">Confirmar asociación</string>
+    <string name="msg_confirm_save">¿Deseas asociar esta canción al álbum?</string>
+    <string name="title_confirm_exit">Confirmación</string>
+    <string name="msg_confirm_exit">¿Deseas salir sin guardar los cambios?</string>
+    <string name="btn_exit">Salir</string>
+    <string name="btn_cancel">Cancelar</string>
 </resources>

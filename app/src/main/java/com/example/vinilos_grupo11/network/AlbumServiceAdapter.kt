@@ -131,4 +131,33 @@ class AlbumServiceAdapter(private val context: Context, private val broker: Voll
         )
     }
 
+    fun addTrackToAlbum(
+        albumId: Int,
+        track: Track,
+        onSuccess: (Track) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        val baseUrl = context.getString(R.string.base_url)
+        val body = JSONObject().apply {
+            put("name", track.name)
+            put("duration", track.duration)
+        }
+        val request = JsonObjectRequest(
+            Request.Method.POST,
+            "${baseUrl}/albums/$albumId/tracks",
+            body,
+            { response ->
+                onSuccess(
+                    Track(
+                        id = response.optInt("id", 0),
+                        name = response.optString("name", ""),
+                        duration = response.optString("duration", "")
+                    )
+                )
+            },
+            { error -> onError(error) }
+        )
+        broker.requestQueue.add(request)
+    }
+
 }

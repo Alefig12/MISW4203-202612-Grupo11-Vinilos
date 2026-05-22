@@ -24,6 +24,19 @@
             android:name="albumId"
             android:defaultValue="-1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_albumDetailFragment_to_addTrackFragment"
+            app:destination="@id/addTrackFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTrackFragment"
+        android:name="com.example.vinilos_grupo11.ui.albums.AddTrackFragment"
+        android:label="@string/add_track_title"
+        tools:layout="@layout/fragment_add_track">
+        <argument
+            android:name="albumId"
+            app:argType="integer" />
     </fragment>
 
     <fragment

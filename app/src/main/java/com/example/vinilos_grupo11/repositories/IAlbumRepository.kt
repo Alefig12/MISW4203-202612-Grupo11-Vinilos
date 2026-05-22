@@ -37,4 +37,13 @@ interface IAlbumRepository {
                 onError = { continuation.resumeWithException(it) }
             )
         }
+
+    fun addTrackToAlbum(
+        albumId: Int,
+        track: com.example.vinilos_grupo11.models.Track,
+        onSuccess: (com.example.vinilos_grupo11.models.Track) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        onError(UnsupportedOperationException("addTrackToAlbum not implemented"))
+    }
 }
