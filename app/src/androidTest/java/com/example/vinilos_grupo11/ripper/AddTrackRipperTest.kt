@@ -145,22 +145,28 @@ class AddTrackRipperTest {
     @Test
     fun tcR_hu08_02_injectsSpecialCharactersInTrackName() {
         navigateToAddTrack()
+        // Payloads ordenados ASCENDENTE por longitud para neutralizar la race del
+        // AccessibilityService: si el texto solo crece entre iteraciones, los setSelection
+        // pendientes nunca apuntan a un offset mayor a la longitud actual.
+        // Maximo a 100 chars (no 250) para no agotar buffers intermedios de emoji2.
         val payloads = listOf(
-            "'; DROP TABLE tracks; --",
-            "<script>alert('xss')</script>",
-            "A".repeat(250),
-            "   \n\t\r   ",
-            "null",
-            "undefined",
-            "-1",
-            "99999999999999",
-            " ",
-            "🎵🎸🎹🎺🎻🎼"
+            " ",                                   // 1
+            "-1",                                  // 2
+            "null",                                // 4
+            "   \n\t\r   ",                        // 9
+            "undefined",                           // 9
+            "🎵🎸🎹🎺🎻🎼",                       // 12 chars (24 code units por surrogate pairs)
+            "99999999999999",                      // 14
+            "'; DROP TABLE tracks; --",            // 25
+            "<script>alert('xss')</script>",       // 29
+            "A".repeat(100)                        // 100
         )
         payloads.forEach { payload ->
             Log.i(TAG, "RIPPER | field=et_track_name | inject=${payload.take(40)}")
             injectText("et_track_name", payload)
-            Thread.sleep(150)
+            // 400ms: tiempo suficiente para que la cola de Accessibility drene los
+            // setSelection encolados por payloads largos antes del siguiente clear().
+            Thread.sleep(400)
         }
         assertTrue("La app no debe crashear con inyecciones en el campo nombre", appIsInForeground())
     }

@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -85,7 +86,9 @@ class AlbumDetailScreenTest {
             onView(withId(R.id.albumsRecyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
 
-            onView(withId(R.id.tv_tracks_header)).check(matches(isDisplayed()))
+            // scrollTo(): el cover tiene aspect 1:1 (alto = ancho de pantalla), por lo que
+            // tv_tracks_header queda bajo el fold en AVDs portrait densos como Nexus_6.
+            onView(withId(R.id.tv_tracks_header)).perform(scrollTo()).check(matches(isDisplayed()))
         }
     }
 
