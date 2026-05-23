@@ -1,10 +1,15 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Pruebas de reconocimiento con Monkey para HU07 (Crear Album) – Vinilos App.
+    Pruebas de reconocimiento con Monkey para HU08 (Asociar Track) - Vinilos App.
 .DESCRIPTION
     Configura el rol Coleccionista, lanza la app y ejecuta el Android Monkey
     con los parametros dados, generando un reporte de crashes/ANRs.
+
+    NOTA: Monkey arranca desde MainActivity. Alcanzar AddTrackFragment requiere
+    atravesar 3 pantallas (lista -> detalle -> form), asi que la cobertura del
+    form es probabilistica, no garantizada. El rol Coleccionista se pre-carga
+    para que el boton "Asociar" del detalle sea visible cuando Monkey llega.
 .PARAMETER Events
     Numero de eventos aleatorios a inyectar (default: 500).
 .PARAMETER Seed
@@ -12,8 +17,8 @@
 .PARAMETER Throttle
     Espera en ms entre eventos (default: 200).
 .EXAMPLE
-    .\ripper\monkey_hu07.ps1
-    .\ripper\monkey_hu07.ps1 -Events 1000 -Seed 7 -Throttle 150
+    .\ripper\monkey_hu08.ps1
+    .\ripper\monkey_hu08.ps1 -Events 1000 -Seed 7 -Throttle 150
 #>
 param(
     [int]$Events   = 500,
@@ -26,10 +31,10 @@ $ErrorActionPreference = "Stop"
 $PACKAGE    = "com.example.vinilos_grupo11"
 $ACTIVITY   = ".ui.MainActivity"
 $Timestamp  = Get-Date -Format "yyyyMMdd_HHmmss"
-$OutputFile = "monkey_hu07_$Timestamp.txt"
+$OutputFile = "monkey_hu08_$Timestamp.txt"
 
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host " Vinilos - Monkey Ripper para HU07 (Crear Album)"           -ForegroundColor Cyan
+Write-Host " Vinilos - Monkey Ripper para HU08 (Asociar Track)"          -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host " Package  : $PACKAGE"
 Write-Host " Eventos  : $Events"
@@ -57,7 +62,7 @@ if ($devices.Count -eq 0) {
 $firstSerial = ($devices[0] -split "`t")[0]
 Write-Host "[OK] Dispositivo: $firstSerial" -ForegroundColor Green
 
-# 3. Configurar SharedPreferences (rol Coleccionista) para que el FAB de HU07 sea visible
+# 3. Configurar SharedPreferences (rol Coleccionista) para que el boton "Asociar" sea visible
 Write-Host ""
 Write-Host "[1/3] Configurando rol Coleccionista..." -ForegroundColor Yellow
 
@@ -107,6 +112,7 @@ $monkeyArgs = @(
 
 # Sin "2>&1": en PS 5.1 redirigir stderr de un .exe envuelve cada linea como
 # ErrorRecord y, con $ErrorActionPreference=Stop, puede abortar el script.
+# Monkey escribe su log relevante a stdout.
 & adb @monkeyArgs | Tee-Object -FilePath $OutputFile
 
 # 6. Analisis de resultados

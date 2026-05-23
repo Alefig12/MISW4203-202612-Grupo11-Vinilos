@@ -82,4 +82,17 @@ class FakeAlbumRepository(
             )
         }
     }
+
+    override fun addTrackToAlbum(
+        albumId: Int,
+        track: Track,
+        onSuccess: (Track) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        if (shouldFail) {
+            onError(Exception("Network Error"))
+        } else {
+            onSuccess(track.copy(id = 999))
+        }
+    }
 }

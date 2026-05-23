@@ -12,6 +12,7 @@ import com.example.vinilos_grupo11.fake.FakeAlbumRepository
 import com.example.vinilos_grupo11.fake.FakeArtistRepository
 import com.example.vinilos_grupo11.fake.FakeCollectorRepository
 import com.example.vinilos_grupo11.ui.MainActivity
+import com.example.vinilos_grupo11.viewmodels.AddTrackViewModel
 import com.example.vinilos_grupo11.viewmodels.AlbumDetailViewModel
 import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
 import com.example.vinilos_grupo11.viewmodels.ArtistDetailViewModel
@@ -60,6 +61,7 @@ class AppRipperTest {
         CollectorsViewModel.testRepositoryFactory = { _ -> FakeCollectorRepository() }
         CollectorDetailViewModel.testRepositoryFactory = { _ -> FakeCollectorRepository() }
         CreateAlbumViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
+        AddTrackViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
         // Lanza MainActivity directamente (igual que los tests Espresso), evitando HomeActivity
         scenario = ActivityScenario.launch(MainActivity::class.java)
         device.wait(Until.hasObject(By.res(PACKAGE, "albumsRecyclerView")), LAUNCH_TIMEOUT)
@@ -75,6 +77,7 @@ class AppRipperTest {
         CollectorsViewModel.testRepositoryFactory = null
         CollectorDetailViewModel.testRepositoryFactory = null
         CreateAlbumViewModel.testRepositoryFactory = null
+        AddTrackViewModel.testRepositoryFactory = null
         context.getSharedPreferences("VinilosPrefs", Context.MODE_PRIVATE)
             .edit().putString("user_role", "Visitante").commit()
         scenario?.close()
@@ -264,5 +267,45 @@ class AppRipperTest {
         Thread.sleep(2_000)
         Log.i(TAG, "RIPPER | flow=full_app | complete | appAlive=${appIsInForeground()}")
         assertTrue("La app debe permanecer estable tras el flujo completo", appIsInForeground())
+    }
+
+    /**
+     * TC-R-APP-05: El ripper ejecuta el flujo de asociar canción como Coleccionista:
+     * abre el detalle de un álbum, toca "Asociar", llena el formulario y confirma.
+     */
+    @Test
+    fun tcR_app_05_collectorAddsTrack() {
+        Log.i(TAG, "RIPPER | flow=add_track | role=Coleccionista | start")
+        device.wait(Until.hasObject(By.res(PACKAGE, "albumsRecyclerView")), LIST_TIMEOUT)
+        Thread.sleep(500)
+
+        // 1. Abrir detalle del primer álbum
+        device.findObject(By.res(PACKAGE, "albumsRecyclerView"))
+            ?.findObjects(By.clickable(true))?.firstOrNull()?.click()
+        device.wait(Until.hasObject(By.res(PACKAGE, "btn_associate_track")), UI_TIMEOUT)
+        Thread.sleep(400)
+
+        // 2. Tocar el botón de asociar
+        Log.i(TAG, "RIPPER | flow=step2 | action=tap_associate")
+        device.findObject(By.res(PACKAGE, "btn_associate_track"))?.click()
+        device.wait(Until.hasObject(By.res(PACKAGE, "et_track_name")), UI_TIMEOUT)
+        Thread.sleep(400)
+
+        // 3. Llenar el formulario
+        Log.i(TAG, "RIPPER | flow=step3 | action=fill_form")
+        device.findObject(By.res(PACKAGE, "et_track_name"))?.apply {
+            click(); clear(); text = "Track App Ripper"
+        }
+        device.findObject(By.res(PACKAGE, "et_track_duration"))?.apply {
+            click(); clear(); text = "4:20"
+        }
+
+        // 4. Guardar y confirmar
+        device.findObject(By.res(PACKAGE, "btn_save_track"))?.click()
+        device.wait(Until.findObject(By.res("android", "button1")), UI_TIMEOUT)?.click()
+
+        Thread.sleep(2_000)
+        Log.i(TAG, "RIPPER | flow=add_track | complete | appAlive=${appIsInForeground()}")
+        assertTrue("La app debe permanecer estable tras asociar una canción", appIsInForeground())
     }
 }
