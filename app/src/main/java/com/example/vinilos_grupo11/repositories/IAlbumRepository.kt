@@ -64,4 +64,17 @@ interface IAlbumRepository {
                 onError = { continuation.resumeWithException(it) }
             )
         }
+
+    suspend fun postTrack(
+        albumId: Int,
+        track: com.example.vinilos_grupo11.models.Track
+    ): com.example.vinilos_grupo11.models.Track =
+        suspendCancellableCoroutine { continuation ->
+            addTrackToAlbum(
+                albumId,
+                track,
+                onSuccess = { continuation.resume(it) },
+                onError = { continuation.resumeWithException(it) }
+            )
+        }
 }

@@ -8,16 +8,21 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vinilos_grupo11.R
-import com.example.vinilos_grupo11.application.VinilosApplication
 import com.example.vinilos_grupo11.databinding.FragmentAddTrackBinding
 import com.example.vinilos_grupo11.models.Track
+import com.example.vinilos_grupo11.viewmodels.AddTrackViewModel
 
 class AddTrackFragment : Fragment() {
 
     private var _binding: FragmentAddTrackBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: AddTrackViewModel by viewModels {
+        AddTrackViewModel.factory(requireActivity().application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,11 +47,38 @@ class AddTrackFragment : Fragment() {
             }
         }
 
+        setupObservers()
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                handleExit()
+                if (requireActivity().isFinishing) {
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    return
+                }
+                handleExit(this)
             }
         })
+    }
+
+    private fun setupObservers() {
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.btnSaveTrack.isEnabled = !isLoading
+        }
+
+        viewModel.saveSuccess.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(context, R.string.msg_track_added_success, Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
+        }
+
+        viewModel.saveError.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                Toast.makeText(context, R.string.msg_track_added_error, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun showConfirmSaveDialog(albumId: Int) {
@@ -54,29 +86,31 @@ class AddTrackFragment : Fragment() {
             .setTitle(R.string.title_confirm_save)
             .setMessage(R.string.msg_confirm_save)
             .setPositiveButton(R.string.btn_save_track) { _, _ ->
-                saveTrack(albumId)
+                submitTrack(albumId)
             }
             .setNegativeButton(R.string.btn_cancel, null)
             .show()
     }
 
     private fun hasChanges(): Boolean {
-        return binding.etTrackName.text?.isNotEmpty() == true || 
+        return binding.etTrackName.text?.isNotEmpty() == true ||
                binding.etTrackDuration.text?.isNotEmpty() == true
     }
 
-    private fun handleExit() {
+    private fun handleExit(callback: OnBackPressedCallback) {
         if (hasChanges()) {
             AlertDialog.Builder(requireContext())
                 .setTitle(R.string.title_confirm_exit)
                 .setMessage(R.string.msg_confirm_exit)
                 .setPositiveButton(R.string.btn_exit) { _, _ ->
-                    findNavController().popBackStack()
+                    callback.isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
                 .setNegativeButton(R.string.btn_cancel, null)
                 .show()
         } else {
-            findNavController().popBackStack()
+            callback.isEnabled = false
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -106,28 +140,10 @@ class AddTrackFragment : Fragment() {
         return isValid
     }
 
-    private fun saveTrack(albumId: Int) {
+    private fun submitTrack(albumId: Int) {
         val name = binding.etTrackName.text.toString()
         val duration = binding.etTrackDuration.text.toString()
-        val track = Track(id = 0, name = name, duration = duration)
-
-        binding.progressBar.visibility = View.VISIBLE
-        binding.btnSaveTrack.isEnabled = false
-
-        val app = requireActivity().application as VinilosApplication
-        app.albumRepository.addTrackToAlbum(
-            albumId,
-            track,
-            onSuccess = {
-                Toast.makeText(context, R.string.msg_track_added_success, Toast.LENGTH_SHORT).show()
-                findNavController().popBackStack()
-            },
-            onError = {
-                binding.progressBar.visibility = View.GONE
-                binding.btnSaveTrack.isEnabled = true
-                Toast.makeText(context, R.string.msg_track_added_error, Toast.LENGTH_SHORT).show()
-            }
-        )
+        viewModel.saveTrack(albumId, Track(id = 0, name = name, duration = duration))
     }
 
     override fun onDestroyView() {
