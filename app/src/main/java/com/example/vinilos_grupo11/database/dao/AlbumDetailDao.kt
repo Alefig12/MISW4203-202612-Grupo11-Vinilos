@@ -15,6 +15,7 @@ object AlbumDetailDao {
         cache.remove(albumId)
     }
 
+
     fun clearCache() {
         cache.clear()
     }

@@ -64,9 +64,6 @@
                     app:layout_constraintTop_toTopOf="@id/iv_album_cover"
                     tools:visibility="visible" />
 
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
-                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Sección 2: Metadata -->

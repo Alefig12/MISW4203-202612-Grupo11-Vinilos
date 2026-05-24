@@ -14,7 +14,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemAlbumBinding
 import com.example.vinilos_grupo11.models.Album
 

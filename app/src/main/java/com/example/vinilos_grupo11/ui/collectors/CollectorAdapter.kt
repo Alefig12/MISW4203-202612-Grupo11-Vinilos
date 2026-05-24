@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.example.vinilos_grupo11.R
 import com.example.vinilos_grupo11.databinding.ItemCollectorBinding
 import com.example.vinilos_grupo11.models.Collector
 

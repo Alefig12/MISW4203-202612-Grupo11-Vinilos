@@ -52,6 +52,7 @@ class AlbumDetailFragment : Fragment() {
 
         setupAssociateButton(albumId)
 
+
         val app = requireActivity().application as VinilosApplication
         val repo = AlbumDetailViewModel.testRepositoryFactory?.invoke(app) ?: app.albumRepository
         viewModel = ViewModelProvider(
@@ -192,6 +193,7 @@ class AlbumDetailFragment : Fragment() {
             binding.btnAssociateTrack.visibility = View.GONE
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

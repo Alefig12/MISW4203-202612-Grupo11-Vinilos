@@ -112,6 +112,7 @@ class AlbumServiceAdapter(private val context: Context, private val broker: Voll
         broker.requestQueue.add(req)
     }
 
+
     private fun parseAlbumDetail(response: JSONObject): AlbumDetail {
         val tracks = mutableListOf<Track>()
         val tracksArray = response.optJSONArray("tracks")
@@ -200,5 +201,6 @@ class AlbumServiceAdapter(private val context: Context, private val broker: Voll
         )
         broker.requestQueue.add(request)
     }
+
 
 }
