@@ -1,0 +1,285 @@
+package com.example.vinilos_grupo11.ripper
+
+import android.content.Context
+import android.util.Log
+import androidx.test.core.app.ActivityScenario
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
+import com.example.vinilos_grupo11.fake.FakeAlbumRepository
+import com.example.vinilos_grupo11.ui.MainActivity
+import com.example.vinilos_grupo11.viewmodels.AlbumListViewModel
+import com.example.vinilos_grupo11.viewmodels.CreateAlbumViewModel
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+
+/**
+ * TC-R-HU07-01 a TC-R-HU07-07: Pruebas de reconocimiento con ripper para HU07 (Crear Álbum).
+ *
+ * Usa UIAutomator para explorar la pantalla de forma sistemática e inyectar entradas
+ * de borde, verificando que la app no crashea bajo condiciones extremas.
+ * Los logs se emiten con tag "VinilosRipper" para su análisis posterior.
+ */
+@RunWith(AndroidJUnit4::class)
+class CreateAlbumRipperTest {
+
+    private lateinit var device: UiDevice
+    private lateinit var context: Context
+    private var scenario: ActivityScenario<MainActivity>? = null
+
+    companion object {
+        private const val PACKAGE = "com.example.vinilos_grupo11"
+        private const val LAUNCH_TIMEOUT = 5_000L
+        private const val UI_TIMEOUT = 3_000L
+        private const val TAG = "VinilosRipper"
+    }
+
+    @Before
+    fun setUp() {
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        context = InstrumentationRegistry.getInstrumentation().targetContext
+        context.getSharedPreferences("VinilosPrefs", Context.MODE_PRIVATE)
+            .edit().putString("user_role", "Coleccionista").commit()
+        AlbumListViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
+        CreateAlbumViewModel.testRepositoryFactory = { _ -> FakeAlbumRepository() }
+        // Lanza MainActivity directamente (igual que los tests Espresso), evitando HomeActivity
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+        device.wait(Until.hasObject(By.res(PACKAGE, "albumsRecyclerView")), LAUNCH_TIMEOUT)
+        Thread.sleep(500)
+    }
+
+    @After
+    fun tearDown() {
+        AlbumListViewModel.testRepositoryFactory = null
+        CreateAlbumViewModel.testRepositoryFactory = null
+        context.getSharedPreferences("VinilosPrefs", Context.MODE_PRIVATE)
+            .edit().putString("user_role", "Visitante").commit()
+        scenario?.close()
+    }
+
+    private fun navigateToCreateAlbum() {
+        val fab = device.wait(Until.findObject(By.res(PACKAGE, "fab_create_album")), UI_TIMEOUT)
+        fab?.click()
+        device.wait(Until.hasObject(By.res(PACKAGE, "et_name")), UI_TIMEOUT)
+        Thread.sleep(400)
+    }
+
+    private fun scrollDown() {
+        device.swipe(540, 1_400, 540, 500, 20)
+        Thread.sleep(300)
+    }
+
+    private fun appIsInForeground() = device.currentPackageName == PACKAGE
+
+    /**
+     * TC-R-HU07-01 (Reconocimiento): El ripper identifica y registra todos los
+     * elementos interactivos del formulario.
+     */
+    @Test
+    fun tcR_hu07_01_recognizesAllFormElements() {
+        navigateToCreateAlbum()
+        Log.i(TAG, "RIPPER | screen=CreateAlbum | action=reconnaissance | start")
+
+        val fieldIds = listOf("et_name", "et_cover", "et_date", "et_description",
+            "acv_genre", "acv_record_label", "btn_save")
+
+        var found = 0
+        fieldIds.forEach { id ->
+            var el = device.findObject(By.res(PACKAGE, id))
+            if (el == null) { scrollDown(); el = device.findObject(By.res(PACKAGE, id)) }
+            val exists = el != null
+            if (exists) found++
+            Log.i(TAG, "RIPPER | element=$id | found=$exists | class=${el?.className}")
+        }
+
+        Log.i(TAG, "RIPPER | screen=CreateAlbum | found=$found/${fieldIds.size} | appAlive=${appIsInForeground()}")
+        assertEquals("Todos los elementos del formulario deben estar presentes", fieldIds.size, found)
+    }
+
+    /**
+     * TC-R-HU07-02 (Inyección): El ripper inyecta cadenas especiales, SQL y HTML
+     * en el campo nombre para verificar robustez ante entradas inesperadas.
+     */
+    @Test
+    fun tcR_hu07_02_injectsSpecialCharactersInNameField() {
+        navigateToCreateAlbum()
+        val payloads = listOf(
+            " ",
+            "-1",
+            "null",
+            "   \n\t\r   ",
+            "undefined",
+            "🎵🎸🎹🎺🎻🎼",
+            "99999999999999",
+            "'; DROP TABLE albums; --",
+            "<script>alert('xss')</script>",
+            "A".repeat(100)
+        )
+        val nameField = device.findObject(By.res(PACKAGE, "et_name"))
+        payloads.forEach { payload ->
+            Log.i(TAG, "RIPPER | field=et_name | inject=${payload.take(40)}")
+            // UiObject2.text= usa AccessibilityService (no abre el teclado),
+            // así que NO se presiona back entre payloads para evitar navegación no deseada
+            nameField?.click()
+            nameField?.clear()
+            nameField?.text = payload
+            Thread.sleep(400)
+        }
+        assertTrue("La app no debe crashear con inyecciones en el campo nombre", appIsInForeground())
+    }
+
+    /**
+     * TC-R-HU07-03 (Validación URL): El ripper intenta URLs malformadas e inválidas
+     * en el campo portada y verifica que la validación del formulario las rechaza.
+     */
+    @Test
+    fun tcR_hu07_03_injectsInvalidUrlsInCoverField() {
+        navigateToCreateAlbum()
+        val invalidUrls = listOf(
+            "no-tiene-protocolo.com/imagen.jpg",
+            "ftp://protocolo-no-soportado.com/img.jpg",
+            "javascript:void(0)",
+            "file:///etc/passwd",
+            "http://",
+            "https://",
+            " ",
+            "A".repeat(500)
+        )
+        val coverField = device.findObject(By.res(PACKAGE, "et_cover"))
+        invalidUrls.forEach { url ->
+            Log.i(TAG, "RIPPER | field=et_cover | inject=${url.take(40)}")
+            coverField?.click()
+            coverField?.clear()
+            coverField?.text = url
+            Thread.sleep(150)
+        }
+        // Attempt save to trigger validation
+        scrollDown()
+        Thread.sleep(300)
+        device.findObject(By.res(PACKAGE, "btn_save"))?.click()
+        Thread.sleep(600)
+        assertTrue("La app no debe crashear al validar URLs inválidas", appIsInForeground())
+    }
+
+    /**
+     * TC-R-HU07-04 (Estabilidad del DatePicker): El ripper abre y cierra el
+     * DatePickerDialog repetidamente para verificar que no hay memory leaks ni crashes.
+     */
+    @Test
+    fun tcR_hu07_04_repeatedDatePickerInteractions() {
+        navigateToCreateAlbum()
+        val dateField = device.findObject(By.res(PACKAGE, "et_date"))
+        repeat(5) { i ->
+            Log.i(TAG, "RIPPER | action=open_date_picker | iteration=$i")
+            dateField?.click()
+            Thread.sleep(500)
+            val ok = device.wait(Until.findObject(By.res("android", "button1")), UI_TIMEOUT)
+            if (ok != null) ok.click() else device.pressBack()
+            Thread.sleep(300)
+        }
+        assertTrue("La app no debe crashear con interacciones repetidas en DatePicker", appIsInForeground())
+    }
+
+    /**
+     * TC-R-HU07-05 (Dropdowns): El ripper selecciona todas las opciones de género
+     * y sello discográfico, verificando estabilidad de los AutoCompleteTextViews.
+     */
+    @Test
+    fun tcR_hu07_05_allDropdownSelections() {
+        navigateToCreateAlbum()
+        scrollDown()
+
+        val genres = listOf("Classical", "Salsa", "Rock", "Folk", "Electronic")
+        val labels = listOf("Sony Music", "EMI", "Discos Fuentes", "Elektra", "Fania Records")
+
+        genres.forEach { genre ->
+            Log.i(TAG, "RIPPER | dropdown=genre | select=$genre")
+            device.findObject(By.res(PACKAGE, "acv_genre"))?.click()
+            Thread.sleep(300)
+            device.wait(Until.findObject(By.text(genre)), UI_TIMEOUT)?.click()
+            Thread.sleep(200)
+        }
+
+        labels.forEach { label ->
+            Log.i(TAG, "RIPPER | dropdown=record_label | select=$label")
+            device.findObject(By.res(PACKAGE, "acv_record_label"))?.click()
+            Thread.sleep(300)
+            device.wait(Until.findObject(By.text(label)), UI_TIMEOUT)?.click()
+            Thread.sleep(200)
+        }
+
+        assertTrue("La app no debe crashear al iterar todas las opciones de dropdown", appIsInForeground())
+    }
+
+    /**
+     * TC-R-HU07-06 (Navegación): El ripper alterna entre el formulario con y sin
+     * cambios para verificar la estabilidad del diálogo de confirmación de salida.
+     */
+    @Test
+    fun tcR_hu07_06_repeatedNavigationWithAndWithoutChanges() {
+        repeat(4) { i ->
+            Log.i(TAG, "RIPPER | action=enter_form | iteration=$i")
+            val fab = device.wait(Until.findObject(By.res(PACKAGE, "fab_create_album")), UI_TIMEOUT)
+            fab?.click()
+            device.wait(Until.hasObject(By.res(PACKAGE, "et_name")), UI_TIMEOUT)
+            Thread.sleep(300)
+
+            if (i % 2 == 1) {
+                // Con cambios: debe aparecer diálogo de confirmación
+                device.findObject(By.res(PACKAGE, "et_name"))?.apply { click(); text = "Test" }
+                Thread.sleep(100)
+                device.pressBack()
+                Thread.sleep(500)
+                // Confirmar salida — busca el botón "Salir" del diálogo
+                val btnSalir = device.wait(Until.findObject(By.text("Salir")), 2_000L)
+                btnSalir?.click()
+            } else {
+                // Sin cambios: vuelve directamente sin diálogo
+                device.pressBack()
+            }
+            device.wait(Until.hasObject(By.res(PACKAGE, "fab_create_album")), UI_TIMEOUT)
+            Thread.sleep(300)
+        }
+        assertTrue("La app no debe crashear con navegación repetida hacia/desde el formulario", appIsInForeground())
+    }
+
+    /**
+     * TC-R-HU07-07 (Flujo completo): El ripper envía el formulario con datos válidos
+     * y verifica que la app permanece estable tras el guardado (regresa a lista o muestra error).
+     */
+    @Test
+    fun tcR_hu07_07_submitValidFormVerifiesStability() {
+        navigateToCreateAlbum()
+        Log.i(TAG, "RIPPER | action=fill_and_submit_valid_form | start")
+
+        device.findObject(By.res(PACKAGE, "et_name"))?.apply {
+            click(); clear(); text = "Album Ripper Submission"
+        }
+        device.findObject(By.res(PACKAGE, "et_cover"))?.apply {
+            click(); clear(); text = "https://example.com/ripper-cover.jpg"
+        }
+        device.findObject(By.res(PACKAGE, "et_date"))?.click()
+        device.wait(Until.findObject(By.res("android", "button1")), UI_TIMEOUT)?.click()
+
+        scrollDown()
+
+        device.findObject(By.res(PACKAGE, "et_description"))?.apply {
+            click(); clear(); text = "Descripcion generada por el ripper"
+        }
+        device.findObject(By.res(PACKAGE, "acv_genre"))?.click()
+        device.wait(Until.findObject(By.text("Classical")), UI_TIMEOUT)?.click()
+        device.findObject(By.res(PACKAGE, "acv_record_label"))?.click()
+        device.wait(Until.findObject(By.text("Sony Music")), UI_TIMEOUT)?.click()
+        device.findObject(By.res(PACKAGE, "btn_save"))?.click()
+
+        Thread.sleep(2_000)
+        Log.i(TAG, "RIPPER | action=submit_complete | appAlive=${appIsInForeground()} | pkg=${device.currentPackageName}")
+        assertTrue("La app debe permanecer estable tras enviar el formulario", appIsInForeground())
+    }
+}

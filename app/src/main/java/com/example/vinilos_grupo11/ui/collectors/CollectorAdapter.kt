@@ -16,6 +16,9 @@ class CollectorAdapter(
     inner class ViewHolder(private val binding: ItemCollectorBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(collector: Collector) {
+            binding.root.contentDescription = binding.root.context.getString(
+                R.string.cd_collector_item, collector.name
+            )
             binding.root.setOnClickListener { onCollectorClick(collector.id) }
             binding.tvCollectorName.text = collector.name
             binding.tvNoPhoto.visibility = View.VISIBLE

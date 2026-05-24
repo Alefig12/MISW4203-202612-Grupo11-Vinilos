@@ -48,6 +48,9 @@ class AlbumListAdapter : ListAdapter<Album, AlbumListAdapter.AlbumViewHolder>(Di
             binding.tvAlbumArtist.visibility = if (showArtistName) View.VISIBLE else View.GONE
             binding.tvNoPhoto.visibility = View.GONE
 
+            binding.root.contentDescription = binding.root.context.getString(
+                R.string.cd_album_item, album.name, album.genre
+            )
             binding.root.setOnClickListener { onAlbumClick?.invoke(album.albumId) }
 
             Glide.with(binding.ivAlbumCover.context)

@@ -1,6 +1,7 @@
 package com.example.vinilos_grupo11.repositories
 
 import com.example.vinilos_grupo11.models.Album
+import com.example.vinilos_grupo11.models.AlbumCreateRequest
 import com.example.vinilos_grupo11.models.AlbumDetail
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -33,6 +34,45 @@ interface IAlbumRepository {
         suspendCancellableCoroutine { continuation ->
             getAlbumDetail(
                 albumId,
+                onSuccess = { continuation.resume(it) },
+                onError = { continuation.resumeWithException(it) }
+            )
+        }
+
+    fun addTrackToAlbum(
+        albumId: Int,
+        track: com.example.vinilos_grupo11.models.Track,
+        onSuccess: (com.example.vinilos_grupo11.models.Track) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        onError(UnsupportedOperationException("addTrackToAlbum not implemented"))
+    }
+
+    fun createAlbum(
+        request: AlbumCreateRequest,
+        onSuccess: (Album) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        onError(UnsupportedOperationException("createAlbum not implemented"))
+    }
+
+    suspend fun postAlbum(request: AlbumCreateRequest): Album =
+        suspendCancellableCoroutine { continuation ->
+            createAlbum(
+                request,
+                onSuccess = { continuation.resume(it) },
+                onError = { continuation.resumeWithException(it) }
+            )
+        }
+
+    suspend fun postTrack(
+        albumId: Int,
+        track: com.example.vinilos_grupo11.models.Track
+    ): com.example.vinilos_grupo11.models.Track =
+        suspendCancellableCoroutine { continuation ->
+            addTrackToAlbum(
+                albumId,
+                track,
                 onSuccess = { continuation.resume(it) },
                 onError = { continuation.resumeWithException(it) }
             )

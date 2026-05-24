@@ -59,7 +59,7 @@ Los resultados quedan en:
 app/build/reports/androidTests/connected/
 ```
 
-### Suite de pruebas (Sprint 2)
+### Suite de pruebas (Sprint 3)
 
 | Clase de prueba | HU | Casos de prueba |
 |---|---|---|
@@ -75,6 +75,13 @@ app/build/reports/androidTests/connected/
 | `CollectorsNavigationTest` | HU05 | Navegación al tab de coleccionistas |
 | `CollectorDetailScreenTest` | HU06 | Detalle de coleccionista: nombre, email, error |
 | `CollectorDetailNavigationTest` | HU06 | Navegar a detalle y volver a la lista |
+| `CreateAlbumScreenTest` | HU07 | Formulario visible, validación vacío, URL inválida, error de API |
+| `CreateAlbumNavigationTest` | HU07 | FAB por rol, navegar al formulario, volver, flujo completo |
+| `ripper/CreateAlbumRipperTest` | HU07 | Reconocimiento UIAutomator: inyección, dropdowns, DatePicker, navegación, flujo completo |
+| `AddTrackScreenTest` | HU08 | Formulario visible, validación vacío, duración inválida, diálogo cancelar, error de API |
+| `AddTrackNavigationTest` | HU08 | Botón asociar por rol, navegar con nombre precargado, back con/sin cambios, flujo completo |
+| `ripper/AddTrackRipperTest` | HU08 | Reconocimiento UIAutomator: inyección nombre, inyección duración, diálogos repetidos, flujo completo |
+| `ripper/AppRipperTest` | Toda la app | Reconocimiento UIAutomator: catálogos, detalles, crear álbum y asociar track por rol Coleccionista |
 
 Todos los tests usan repositorios falsos (`FakeAlbumRepository`, `FakeArtistRepository`, `FakeCollectorRepository`) para no depender de la red.
 
@@ -100,7 +107,7 @@ METRIC | story=HU01-AlbumCatalog | device=samsung SM-S938B (API 36) | duration=6
 METRIC | story=HU04-AlbumDetail(id=101) | device=... | duration=688ms | result=ok
 ```
 
-Las historias medidas son: `HU01-AlbumCatalog`, `HU02-AlbumDetail`, `HU03-ArtistCatalog`, `HU04-ArtistDetail`, `HU05-CollectorCatalog`, `HU06-CollectorDetail`.
+Las historias medidas son: `HU01-AlbumCatalog`, `HU02-AlbumDetail`, `HU03-ArtistCatalog`, `HU04-ArtistDetail`, `HU05-CollectorCatalog`, `HU06-CollectorDetail`, `HU07-CreateAlbum`, `HU08-AddTrack`.
 
 ## Estructura del proyecto
 
@@ -121,7 +128,50 @@ app/src/main/java/com/example/vinilos_grupo11/
 
 app/src/androidTest/java/com/example/vinilos_grupo11/
 ├── fake/              # Repositorios falsos para pruebas (sin red)
+├── ripper/            # Pruebas de reconocimiento con UIAutomator (CreateAlbumRipperTest, AddTrackRipperTest, AppRipperTest)
 ├── DisableAnimationsRule.kt  # JUnit Rule para deshabilitar animaciones en tests
 ├── *ScreenTest.kt     # Pruebas E2E de contenido de pantalla
 └── *NavigationTest.kt # Pruebas de navegación entre pantallas
+
+ripper/
+├── monkey_hu07.sh     # Script Monkey para HU07 (bash – macOS/Linux)
+├── monkey_hu07.ps1    # Script Monkey para HU07 (PowerShell – Windows)
+├── monkey_hu08.sh     # Script Monkey para HU08 (bash – macOS/Linux)
+└── monkey_hu08.ps1    # Script Monkey para HU08 (PowerShell – Windows)
 ```
+
+## Pruebas de reconocimiento con rippers
+
+### UIAutomator (código)
+
+Las pruebas en `ripper/` usan UIAutomator 2.x para explorar la UI de forma sistemática sin depender de la red (usan repositorios falsos):
+
+```bash
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.vinilos_grupo11.ripper.CreateAlbumRipperTest
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.vinilos_grupo11.ripper.AddTrackRipperTest
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.vinilos_grupo11.ripper.AppRipperTest
+```
+
+Los logs del ripper se emiten con tag `VinilosRipper`:
+
+```bash
+adb logcat -s VinilosRipper
+```
+
+### Android Monkey (script)
+
+El Monkey inyecta eventos aleatorios sobre la app instalada. Requiere un dispositivo/emulador conectado con ADB:
+
+```bash
+# macOS / Linux
+chmod +x ripper/monkey_hu07.sh ripper/monkey_hu08.sh
+./ripper/monkey_hu07.sh [eventos] [semilla] [throttle_ms]
+./ripper/monkey_hu07.sh 500 42 200
+./ripper/monkey_hu08.sh 500 42 200
+
+# Windows (PowerShell)
+.\ripper\monkey_hu07.ps1 -Events 500 -Seed 42 -Throttle 200
+.\ripper\monkey_hu08.ps1 -Events 500 -Seed 42 -Throttle 200
+```
+
+Los scripts configuran automáticamente el rol `Coleccionista` (necesario para que las acciones de HU07 y HU08 sean accesibles), ejecutan el Monkey y generan un reporte de crashes/ANRs en `monkey_hu07_<timestamp>.txt` o `monkey_hu08_<timestamp>.txt`. Nota: Monkey arranca desde `MainActivity`, así que alcanzar el formulario de Asociar Track (3 pantallas adentro) es probabilístico — el script valida estabilidad global de la app con el rol cargado.

@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -47,6 +49,9 @@ class AlbumDetailFragment : Fragment() {
             binding.tvDetailError.visibility = View.VISIBLE
             return
         }
+
+        setupAssociateButton(albumId)
+
 
         val app = requireActivity().application as VinilosApplication
         val repo = AlbumDetailViewModel.testRepositoryFactory?.invoke(app) ?: app.albumRepository
@@ -170,6 +175,25 @@ class AlbumDetailFragment : Fragment() {
         val ss = totalSeconds % 60
         return String.format("%02d:%02d", mm, ss)
     }
+
+    private fun setupAssociateButton(albumId: Int) {
+        val prefs = requireActivity().getSharedPreferences("VinilosPrefs", AppCompatActivity.MODE_PRIVATE)
+        val role = prefs.getString("user_role", "Visitante")
+
+        if (role == "Coleccionista") {
+            binding.btnAssociateTrack.visibility = View.VISIBLE
+            binding.btnAssociateTrack.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putInt("albumId", albumId)
+                    putString("albumName", viewModel.albumDetail.value?.name)
+                }
+                findNavController().navigate(R.id.action_albumDetailFragment_to_addTrackFragment, bundle)
+            }
+        } else {
+            binding.btnAssociateTrack.visibility = View.GONE
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:scrollbars="none"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,12 +36,33 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
+                    android:contentDescription="@string/cd_album_cover"
                     app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.MediumComponent"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_associate_track"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:backgroundTint="#80000000"
+                    android:text="@string/btn_associate"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="1.5dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_album_cover"
+                    app:layout_constraintTop_toTopOf="@id/iv_album_cover"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,10 +105,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:lineSpacingMultiplier="0.95"
+                android:textColor="@color/vinilos_text_primary"
                 android:textSize="32sp"
                 android:textStyle="bold"
-                tools:text="Midnight Grooves"
-                tools:textColor="@color/vinilos_text_primary" />
+                tools:text="Midnight Grooves" />
 
             <TextView
                 android:id="@+id/tv_album_artists"
@@ -167,6 +188,8 @@
         android:id="@+id/detail_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/cd_loading"
+        android:accessibilityLiveRegion="polite"
         android:indeterminateTint="@color/vinilos_salmon"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -3,6 +3,7 @@ package com.example.vinilos_grupo11.repositories
 import com.example.vinilos_grupo11.database.dao.AlbumDao
 import com.example.vinilos_grupo11.database.dao.AlbumDetailDao
 import com.example.vinilos_grupo11.models.Album
+import com.example.vinilos_grupo11.models.AlbumCreateRequest
 import com.example.vinilos_grupo11.models.AlbumDetail
 import com.example.vinilos_grupo11.network.AlbumServiceAdapter
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -60,6 +61,38 @@ class AlbumRepository(private val adapter: AlbumServiceAdapter) : IAlbumReposito
             onSuccess = { detail ->
                 detailDao.put(albumId, detail)
                 onSuccess(detail)
+            },
+            onError = onError
+        )
+    }
+
+    override fun addTrackToAlbum(
+        albumId: Int,
+        track: com.example.vinilos_grupo11.models.Track,
+        onSuccess: (com.example.vinilos_grupo11.models.Track) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        adapter.addTrackToAlbum(
+            albumId,
+            track,
+            onSuccess = { newTrack ->
+                detailDao.remove(albumId)
+                onSuccess(newTrack)
+            },
+            onError = onError
+        )
+    }
+
+    override fun createAlbum(
+        request: AlbumCreateRequest,
+        onSuccess: (Album) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        adapter.createAlbum(
+            request,
+            onSuccess = { album ->
+                dao.clearCache()
+                onSuccess(album)
             },
             onError = onError
         )
